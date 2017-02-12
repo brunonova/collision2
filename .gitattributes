@@ -1,0 +1,8 @@
+*.java              text
+*.properties        text
+*.md                text
+gradle.properties   text
+settings.gradle     text
+
+*.bat               eol=crlf
+/gradlew            eol=lf

@@ -6,3 +6,15 @@ dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 }
+
+task createProperties(dependsOn: processResources) << {
+    new File("$buildDir/resources/main/brunonova/collision/res/version.properties").withWriter { w ->
+        Properties p = new Properties()
+        p['version'] = project.version.toString()
+        p.store(w, null)
+    }
+}
+
+classes {
+    dependsOn createProperties
+}

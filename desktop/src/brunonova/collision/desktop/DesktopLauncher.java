@@ -2,7 +2,7 @@ package brunonova.collision.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import brunonova.collision.Collision;
+import brunonova.collision.core.Collision;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import java.io.IOException;

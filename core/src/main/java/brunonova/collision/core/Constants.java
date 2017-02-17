@@ -24,6 +24,9 @@ import java.util.Properties;
  * Global constants.
  */
 public final class Constants {
+    /** Base path of the <i>res</i> directory (without the trailing slash). */
+    public static final String RES_PATH = "brunonova/collision/res";
+
     private static final String TAG = Constants.class.getName();
     private static String version;
 
@@ -38,7 +41,7 @@ public final class Constants {
             // Read version from version.properties file
             Properties prop = new Properties();
             try {
-                prop.load(Constants.class.getResourceAsStream("/brunonova/collision/res/version.properties"));
+                prop.load(Constants.class.getResourceAsStream(RES_PATH + "/version.properties"));
                 version = prop.getProperty("version", "N/A");
             } catch(IOException ex) {
                 Gdx.app.error(TAG, "error loading version.properties", ex);

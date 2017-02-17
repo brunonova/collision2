@@ -63,9 +63,9 @@ public class DesktopLauncher {
         config.width = 600;
         config.height = 600;
         config.resizable = true;
-        config.addIcon("brunonova/collision/res/icons/icon-128x128.png", Files.FileType.Internal);
-        config.addIcon("brunonova/collision/res/icons/icon-32x32.png", Files.FileType.Internal);
-        config.addIcon("brunonova/collision/res/icons/icon-16x16.png", Files.FileType.Internal);
+        config.addIcon(Constants.RES_PATH + "/icons/icon-128x128.png", Files.FileType.Internal);
+        config.addIcon(Constants.RES_PATH + "/icons/icon-32x32.png", Files.FileType.Internal);
+        config.addIcon(Constants.RES_PATH + "/icons/icon-16x16.png", Files.FileType.Internal);
 		LwjglApplication app = new LwjglApplication(new Collision(), config);
 	}
 }

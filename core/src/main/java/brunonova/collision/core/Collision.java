@@ -16,9 +16,12 @@
  */
 package brunonova.collision.core;
 
+import brunonova.collision.core.screens.GameScreen;
+import static brunonova.collision.core.Constants.RES_PATH;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -26,22 +29,50 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class Collision extends Game {
 	private SpriteBatch batch;
+    private AssetManager assetManager;
+    private OrthographicCamera camera;
+    private GameScreen gameScreen;
 
 	@Override
-	public void create () {
+	public void create() {
 		batch = new SpriteBatch();
-        //setScreen(screen);
+        camera = new OrthographicCamera(600, 600);
+        camera.position.set(300, 300, 0);
+        camera.update();
+        loadAssets();
+        gameScreen = new GameScreen(this);
+        setScreen(gameScreen);
 	}
 
-	@Override
-	public void render () {
-        //super.render();
-		Gdx.gl.glClearColor(0.75f, 0.75f, 0.75f, 1f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	}
+    /**
+     * Loads all game assets.
+     */
+    private void loadAssets() {
+        assetManager = new AssetManager();
+
+        // Load images
+        assetManager.load(RES_PATH + "/images/player.png", Texture.class);
+
+        // Block to load all assets synchronously
+        assetManager.finishLoading();
+    }
 
 	@Override
-	public void dispose () {
+	public void dispose() {
+        super.dispose();
+        assetManager.dispose();
 		batch.dispose();
 	}
+
+    public SpriteBatch getBatch() {
+        return batch;
+    }
+
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
+
+    public OrthographicCamera getCamera() {
+        return camera;
+    }
 }

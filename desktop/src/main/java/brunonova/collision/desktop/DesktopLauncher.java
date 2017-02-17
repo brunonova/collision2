@@ -60,8 +60,8 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Collision";
         config.vSyncEnabled = true;
-        config.width = 600;
-        config.height = 600;
+        config.width = Constants.WINDOW_WIDTH;
+        config.height = Constants.WINDOW_HEIGHT;
         config.resizable = true;
         config.addIcon(Constants.RES_PATH + "/icons/icon-128x128.png", Files.FileType.Internal);
         config.addIcon(Constants.RES_PATH + "/icons/icon-32x32.png", Files.FileType.Internal);

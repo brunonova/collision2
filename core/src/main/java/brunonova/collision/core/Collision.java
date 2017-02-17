@@ -36,8 +36,8 @@ public class Collision extends Game {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-        camera = new OrthographicCamera(600, 600);
-        camera.position.set(300, 300, 0);
+        camera = new OrthographicCamera(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+        camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2, 0);  // center the camera on the screen
         camera.update();
         loadAssets();
         gameScreen = new GameScreen(this);

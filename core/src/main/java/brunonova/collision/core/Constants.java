@@ -26,6 +26,10 @@ import java.util.Properties;
 public final class Constants {
     /** Base path of the <i>res</i> directory (without the trailing slash). */
     public static final String RES_PATH = "brunonova/collision/res";
+    /** Width of the window. */
+    public static final int WINDOW_WIDTH = 600;
+    /** Height of the window. */
+    public static final int WINDOW_HEIGHT = 600;
 
     private static final String TAG = Constants.class.getName();
     private static String version;

@@ -1,6 +1,7 @@
 apply plugin: "java"
 
 sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
 archivesBaseName = "collision"
 project.ext.mainClassName = "brunonova.collision.desktop.DesktopLauncher"
 
@@ -23,7 +24,7 @@ task dist(dependsOn: classes, type: Jar) {
     from files(sourceSets.main.output.classesDir)
     from files(sourceSets.main.output.resourcesDir)
     from {configurations.compile.collect {zipTree(it)}}
- 
+
     manifest {
         attributes "Main-Class": project.mainClassName
     }

@@ -30,4 +30,11 @@ public class Player extends SpriteActor {
     public Player(Collision game) {
         super(game, "player.png");
     }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        // Determine 
+    }
 }

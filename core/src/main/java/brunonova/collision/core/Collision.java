@@ -19,6 +19,8 @@ package brunonova.collision.core;
 import brunonova.collision.core.screens.GameScreen;
 import static brunonova.collision.core.Constants.RES_PATH;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -51,6 +53,20 @@ public class Collision extends Game {
         gameScreen = new GameScreen(this);
         setScreen(gameScreen);
 	}
+
+    @Override
+    public void render() {
+        super.render();
+
+        // Enable or disable full-screen mode when pressing F11
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
+            if(Gdx.graphics.isFullscreen()) {
+                Gdx.graphics.setWindowedMode(getWidth(), getHeight());
+            } else {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+            }
+        }
+    }
 
 	@Override
 	public void dispose() {

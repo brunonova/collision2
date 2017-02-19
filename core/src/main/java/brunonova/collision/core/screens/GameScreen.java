@@ -19,6 +19,7 @@ package brunonova.collision.core.screens;
 import brunonova.collision.core.Collision;
 import brunonova.collision.core.actors.Player;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 
@@ -39,7 +40,6 @@ public class GameScreen extends BaseScreen {
     public void create() {
         super.create();
         player = addActor(new Player(game));
-        player.setPosition(50, 50);
     }
 
     @Override
@@ -58,6 +58,7 @@ public class GameScreen extends BaseScreen {
     public void act(float delta) {
         super.act(delta);
 
+        // Exit if the Escape key is presses
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }

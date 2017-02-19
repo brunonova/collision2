@@ -18,6 +18,7 @@ package brunonova.collision.core.actors;
 
 import brunonova.collision.core.Collision;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Align;
 
 
 /**
@@ -33,5 +34,22 @@ public abstract class BaseActor extends Actor {
      */
     public BaseActor(Collision game) {
         this.game = game;
+    }
+
+    /**
+     * Ensures the actor is inside of the game window, moving it if necessary.
+     */
+    public final void keepInsideWindow() {
+        if(getX() < 0) setX(0);
+        if(getRight() > game.getWidth()) setX(game.getWidth() - getWidth());
+        if(getY() < 0) setY(0);
+        if(getTop() > game.getHeight()) setY(game.getHeight()- getHeight());
+    }
+
+    /**
+     * Centers the actor on the game window.
+     */
+    public final void centerOnScreen() {
+        setPosition(game.getWidth() / 2, game.getHeight() / 2, Align.center);
     }
 }

@@ -19,9 +19,7 @@ package brunonova.collision.core.screens;
 import brunonova.collision.core.Collision;
 import brunonova.collision.core.actors.Player;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 
 
 /**
@@ -33,7 +31,6 @@ public class GameScreen extends BaseScreen {
 
     public GameScreen(Collision game) {
         super(game);
-        clearColor = new Color(0.75f, 0.75f, 0.75f, 1);
     }
 
     @Override

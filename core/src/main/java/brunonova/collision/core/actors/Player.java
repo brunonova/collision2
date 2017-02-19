@@ -34,6 +34,7 @@ public class Player extends SpriteActor {
      */
     public Player(Collision game) {
         super(game, "player.png");
+        centerOnScreen();
     }
 
     @Override
@@ -57,12 +58,7 @@ public class Player extends SpriteActor {
         // Move the player
         if(dx != 0 || dy != 0) {
             moveBy(dx, dy);
+            keepInsideWindow();  // ensure the player is inside of the window
         }
-
-        // Ensure the player is inside the game window
-        if(getX() < 0) setX(0);
-        if(getRight() > game.getWidth()) setX(game.getWidth() - getWidth());
-        if(getY() < 0) setY(0);
-        if(getTop() > game.getHeight()) setY(game.getHeight()- getHeight());
     }
 }

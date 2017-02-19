@@ -17,12 +17,14 @@
 package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
+import brunonova.collision.core.Constants;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -36,12 +38,16 @@ public abstract class BaseScreen implements Screen {
     protected final Collision game;
     /** The game's sprite batch. */
     protected final Batch batch;
+    /** The game's shape renderer. */
+    protected final ShapeRenderer shapeRenderer;
     /** The game's asset manager. */
     protected final AssetManager assetManager;
     /** The stage for this screen (created in the {@link #create()} method). */
     protected Stage stage;
-    /** The color used to clear the screen. */
+    /** The color used to clear the screen (also affects the black bars). */
     protected Color clearColor = new Color(0, 0, 0, 1);
+    /** The (optional) background color of the stage (doesn't affect the black bars). */
+    protected Color backgroundColor = Constants.BACKGROUND_COLOR;
 
     /** Whether the "created" method has already been called. */
     private boolean created = false;
@@ -53,6 +59,7 @@ public abstract class BaseScreen implements Screen {
     public BaseScreen(Collision game) {
         this.game = game;
         this.batch = game.getBatch();
+        this.shapeRenderer = game.getShapeRenderer();
         this.assetManager = game.getAssetManager();
     }
 
@@ -111,6 +118,15 @@ public abstract class BaseScreen implements Screen {
         // Clear the screen
         Gdx.gl.glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Draw the background color inside the viewport without touching the
+        // black bars (glClear also affects the black bars)
+        if(backgroundColor != null) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(backgroundColor);
+            shapeRenderer.rect(0, 0, game.getWidth(), game.getHeight());
+            shapeRenderer.end();
+        }
 
         act(delta);
         stage.draw();

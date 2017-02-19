@@ -17,6 +17,7 @@
 package brunonova.collision.core;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -31,6 +32,8 @@ public final class Constants {
     public static final int WINDOW_WIDTH = 600;
     /** Height of the window. */
     public static final int WINDOW_HEIGHT = 600;
+    /** The background color of the windows. */
+    public static final Color BACKGROUND_COLOR = new Color(0.75f, 0.75f, 0.75f, 1);
 
     private static final String TAG = Constants.class.getName();
     private static String version;

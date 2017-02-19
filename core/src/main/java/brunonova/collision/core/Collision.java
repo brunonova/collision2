@@ -24,6 +24,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 
 /**
@@ -31,6 +32,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class Collision extends Game {
 	private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
     private AssetManager assetManager;
     private GameScreen gameScreen;
     private final int width;
@@ -49,6 +51,7 @@ public class Collision extends Game {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
         loadAssets();
         gameScreen = new GameScreen(this);
         setScreen(gameScreen);
@@ -72,6 +75,7 @@ public class Collision extends Game {
 	public void dispose() {
         super.dispose();
         assetManager.dispose();
+        shapeRenderer.dispose();
 		batch.dispose();
 	}
 
@@ -83,6 +87,7 @@ public class Collision extends Game {
 
         // Load images
         assetManager.load(RES_PATH + "/images/player.png", Texture.class);
+        assetManager.load(RES_PATH + "/images/enemy.png", Texture.class);
 
         // Block to load all assets synchronously
         assetManager.finishLoading();
@@ -103,6 +108,14 @@ public class Collision extends Game {
      */
     public SpriteBatch getBatch() {
         return batch;
+    }
+
+    /**
+     * Returns the game's shape renderer.
+     * @return The shape renderer.
+     */
+    public ShapeRenderer getShapeRenderer() {
+        return shapeRenderer;
     }
 
     /**

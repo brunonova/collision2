@@ -5,7 +5,6 @@ sourceCompatibility = 1.8
 
 dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 }
 
 task createProperties(dependsOn: processResources) << {

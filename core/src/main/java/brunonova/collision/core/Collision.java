@@ -23,6 +23,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+
 /**
  * Main class of the game.
  */
@@ -30,6 +31,18 @@ public class Collision extends Game {
 	private SpriteBatch batch;
     private AssetManager assetManager;
     private GameScreen gameScreen;
+    private final int width;
+    private final int height;
+
+    /**
+     * Creates the game.
+     * @param width Width of the game area.
+     * @param height Height of the game area.
+     */
+    public Collision(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
 
 	@Override
 	public void create() {
@@ -47,7 +60,7 @@ public class Collision extends Game {
 	}
 
     /**
-     * Loads all game assets.
+     * Loads all game assets, blocking while doing so.
      */
     private void loadAssets() {
         assetManager = new AssetManager();
@@ -68,11 +81,35 @@ public class Collision extends Game {
         return assetManager.get(RES_PATH + "/images/" + fileName, Texture.class);
     }
 
+    /**
+     * Returns the game's sprite batch.
+     * @return The sprite batch.
+     */
     public SpriteBatch getBatch() {
         return batch;
     }
 
+    /**
+     * Returns the game's asset manager.
+     * @return The asset manager.
+     */
     public AssetManager getAssetManager() {
         return assetManager;
+    }
+
+    /**
+     * Returns the width of the game area (original window width).
+     * @return Width of the game area.
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * Returns the height of the game area (original window height).
+     * @return Height of the game area.
+     */
+    public int getHeight() {
+        return height;
     }
 }

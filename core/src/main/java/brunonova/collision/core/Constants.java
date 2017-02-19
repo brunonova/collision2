@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import java.io.IOException;
 import java.util.Properties;
 
+
 /**
  * Global constants.
  */

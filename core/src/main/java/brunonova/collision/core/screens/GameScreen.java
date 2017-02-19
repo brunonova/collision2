@@ -20,44 +20,50 @@ import brunonova.collision.core.Collision;
 import brunonova.collision.core.actors.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 
+
+/**
+ * The screen of the game itself.
+ */
 public class GameScreen extends BaseScreen {
-    private final Player player;
+    /** The player ball. */
+    private Player player;
 
     public GameScreen(Collision game) {
         super(game);
+        clearColor = new Color(0.75f, 0.75f, 0.75f, 1);
+    }
+
+    @Override
+    public void create() {
+        super.create();
         player = addActor(new Player(game));
     }
 
     @Override
     public void show() {
+        super.show();
         Gdx.input.setCursorCatched(true);
     }
 
     @Override
     public void hide() {
+        super.hide();
         Gdx.input.setCursorCatched(false);
     }
 
     @Override
-    public void render(float delta) {
+    public void act(float delta) {
+        super.act(delta);
+
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
+    }
 
-        Gdx.gl.glClearColor(0.75f, 0.75f, 0.75f, 1f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    @Override
+    public void render(float delta) {
         super.render(delta);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
     }
 }

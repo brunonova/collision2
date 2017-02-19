@@ -27,6 +27,7 @@ import java.util.Arrays;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
+
 /**
  * Desktop launcher for Collision.
  */
@@ -66,6 +67,6 @@ public class DesktopLauncher {
         config.addIcon(Constants.RES_PATH + "/icons/icon-128x128.png", Files.FileType.Internal);
         config.addIcon(Constants.RES_PATH + "/icons/icon-32x32.png", Files.FileType.Internal);
         config.addIcon(Constants.RES_PATH + "/icons/icon-16x16.png", Files.FileType.Internal);
-		LwjglApplication app = new LwjglApplication(new Collision(), config);
+		LwjglApplication app = new LwjglApplication(new Collision(config.width, config.height), config);
 	}
 }

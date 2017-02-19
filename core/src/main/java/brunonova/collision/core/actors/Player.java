@@ -58,5 +58,11 @@ public class Player extends SpriteActor {
         if(dx != 0 || dy != 0) {
             moveBy(dx, dy);
         }
+
+        // Ensure the player is inside the game window
+        if(getX() < 0) setX(0);
+        if(getRight() > game.getWidth()) setX(game.getWidth() - getWidth());
+        if(getY() < 0) setY(0);
+        if(getTop() > game.getHeight()) setY(game.getHeight()- getHeight());
     }
 }

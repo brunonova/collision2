@@ -31,9 +31,12 @@ public abstract class SpriteActor extends BaseActor {
      * @param game The game.
      * @param imageName File name of the image of the actor.
      */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public SpriteActor(Collision game, String imageName) {
         super(game);
         sprite = new Sprite(game.getImage(imageName));
+        setWidth(sprite.getWidth());
+        setHeight(sprite.getHeight());
     }
 
     /**

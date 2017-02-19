@@ -17,23 +17,17 @@
 package brunonova.collision.core.actors;
 
 import brunonova.collision.core.Collision;
-import com.badlogic.gdx.graphics.g2d.Batch;
 
 
 /**
  * The player ball.
  */
-public class Player extends BaseActor {
+public class Player extends SpriteActor {
     /**
      * Creates the player.
      * @param game The game.
      */
     public Player(Collision game) {
         super(game, "player.png");
-    }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        batch.draw(image, 0, 0, 32, 32);
     }
 }

@@ -39,6 +39,7 @@ public class GameScreen extends BaseScreen {
     public void create() {
         super.create();
         player = addActor(new Player(game));
+        player.setPosition(50, 50);
     }
 
     @Override

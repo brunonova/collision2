@@ -17,18 +17,15 @@
 package brunonova.collision.core.actors;
 
 import brunonova.collision.core.Collision;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 
 /**
  * Base class for all game actors.
  */
-public class BaseActor extends Actor {
+public abstract class BaseActor extends Actor {
     /** The game. */
     protected Collision game;
-    /** The (optional) image of the actor. */
-    protected Texture image;
 
     /**
      * Creates the actor.
@@ -36,15 +33,5 @@ public class BaseActor extends Actor {
      */
     public BaseActor(Collision game) {
         this.game = game;
-    }
-
-    /**
-     * Creates the actor.
-     * @param game The game.
-     * @param imageName File name of the image of the actor.
-     */
-    public BaseActor(Collision game, String imageName) {
-        this(game);
-        this.image = game.getImage(imageName);
     }
 }

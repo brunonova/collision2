@@ -31,8 +31,6 @@ public final class Constants {
     public static final int WINDOW_WIDTH = 600;
     /** Height of the window. */
     public static final int WINDOW_HEIGHT = 600;
-    /** The speed of the player ball when using the keyboard. */
-    public static final float PLAYER_SPEED = 200;
 
     private static final String TAG = Constants.class.getName();
     private static String version;

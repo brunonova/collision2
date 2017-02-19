@@ -17,12 +17,17 @@
 package brunonova.collision.core.actors;
 
 import brunonova.collision.core.Collision;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 
 
 /**
  * The player ball.
  */
 public class Player extends SpriteActor {
+    /** The speed of the player ball when using the keyboard (pixels/second). */
+    public static final float KEYBOARD_SPEED = 400;
+
     /**
      * Creates the player.
      * @param game The game.
@@ -35,6 +40,23 @@ public class Player extends SpriteActor {
     public void act(float delta) {
         super.act(delta);
 
-        // Determine 
+        // Determine how many pixels to move the player by this frame
+        float dx = 0, dy = 0;
+
+        // Keyboard movement
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) dx -= KEYBOARD_SPEED * delta;
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) dx += KEYBOARD_SPEED * delta;
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) dy -= KEYBOARD_SPEED * delta;
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)) dy += KEYBOARD_SPEED * delta;
+
+        // Mouse movement
+        // TODO: impose speed limit to avoid "teleporting"
+        dx += Gdx.input.getDeltaX();
+        dy -= Gdx.input.getDeltaY();
+
+        // Move the player
+        if(dx != 0 || dy != 0) {
+            moveBy(dx, dy);
+        }
     }
 }

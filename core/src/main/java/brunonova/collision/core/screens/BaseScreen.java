@@ -17,32 +17,45 @@
 package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
-import static brunonova.collision.core.Constants.RES_PATH;
+import brunonova.collision.core.Constants;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public abstract class BaseScreen implements Screen {
     protected final Collision game;
     protected final Batch batch;
     protected final AssetManager assetManager;
-    protected final OrthographicCamera camera;
+    protected final Stage stage;
 
     public BaseScreen(Collision game) {
         this.game = game;
         this.batch = game.getBatch();
         this.assetManager = game.getAssetManager();
-        this.camera = game.getCamera();
+        this.stage = new Stage(new FitViewport(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), batch);
     }
 
-    /**
-     * Returns the image with the specified file name.
-     * @param fileName Name of the file.
-     * @return The image.
-     */
-    public Texture getImage(String fileName) {
-        return assetManager.get(RES_PATH + "/images/" + fileName, Texture.class);
+    @Override
+    public void render(float delta) {
+        stage.act(delta);
+        stage.draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
+
+    public final <T extends Actor> T addActor(T actor) {
+        stage.addActor(actor);
+        return actor;
     }
 }

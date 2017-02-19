@@ -20,7 +20,6 @@ import brunonova.collision.core.screens.GameScreen;
 import static brunonova.collision.core.Constants.RES_PATH;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -30,18 +29,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Collision extends Game {
 	private SpriteBatch batch;
     private AssetManager assetManager;
-    private OrthographicCamera camera;
     private GameScreen gameScreen;
 
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-        camera = new OrthographicCamera(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        camera.position.set(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2, 0);  // center the camera on the screen
-        camera.update();
         loadAssets();
         gameScreen = new GameScreen(this);
         setScreen(gameScreen);
+	}
+
+	@Override
+	public void dispose() {
+        super.dispose();
+        assetManager.dispose();
+		batch.dispose();
 	}
 
     /**
@@ -57,12 +59,14 @@ public class Collision extends Game {
         assetManager.finishLoading();
     }
 
-	@Override
-	public void dispose() {
-        super.dispose();
-        assetManager.dispose();
-		batch.dispose();
-	}
+    /**
+     * Returns the image with the specified file name.
+     * @param fileName Name of the file.
+     * @return The image.
+     */
+    public Texture getImage(String fileName) {
+        return assetManager.get(RES_PATH + "/images/" + fileName, Texture.class);
+    }
 
     public SpriteBatch getBatch() {
         return batch;
@@ -70,9 +74,5 @@ public class Collision extends Game {
 
     public AssetManager getAssetManager() {
         return assetManager;
-    }
-
-    public OrthographicCamera getCamera() {
-        return camera;
     }
 }

@@ -17,13 +17,17 @@
 package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
+import brunonova.collision.core.actors.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 
 public class GameScreen extends BaseScreen {
+    private final Player player;
+
     public GameScreen(Collision game) {
         super(game);
+        player = addActor(new Player(game));
     }
 
     @Override
@@ -44,16 +48,7 @@ public class GameScreen extends BaseScreen {
 
         Gdx.gl.glClearColor(0.75f, 0.75f, 0.75f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        batch.draw(getImage("player.png"), 0, 0, 32, 32);
-        batch.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
+        super.render(delta);
     }
 
     @Override
@@ -63,11 +58,6 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void resume() {
-
-    }
-
-    @Override
-    public void dispose() {
 
     }
 }

@@ -22,7 +22,7 @@ import com.badlogic.gdx.math.MathUtils;
 /**
  * An enemy ball.
  */
-public class Enemy extends SpriteActor {
+public class Enemy extends Ball {
     /** The minimum distance to the player ball when created. */
     public static final float MINIMUM_DISTANCE_TO_PLAYER = 100;
     /** Initial speed of the enemy balls on the easy mode. */

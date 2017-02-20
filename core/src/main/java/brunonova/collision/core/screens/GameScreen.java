@@ -69,11 +69,22 @@ public class GameScreen extends BaseScreen {
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
+
+        // Detect collision between player and enemy balls
+        for(Enemy enemy: enemies) {
+            if(player.overlaps(enemy)) {
+                gameOver();
+            }
+        }
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+    }
+
+    private void gameOver() {
+        Gdx.app.exit();
     }
 
     /**

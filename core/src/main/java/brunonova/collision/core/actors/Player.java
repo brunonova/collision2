@@ -24,7 +24,7 @@ import com.badlogic.gdx.Input;
 /**
  * The player ball.
  */
-public class Player extends SpriteActor {
+public class Player extends Ball {
     /** The speed of the player ball when using the keyboard (pixels/second). */
     public static final float KEYBOARD_SPEED = 400;
 

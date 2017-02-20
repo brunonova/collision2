@@ -17,6 +17,7 @@
 package brunonova.collision.core.actors;
 
 import brunonova.collision.core.Collision;
+import com.badlogic.gdx.math.MathUtils;
 
 /**
  * An enemy ball.
@@ -25,6 +26,8 @@ public class Enemy extends SpriteActor {
     /** The minimum distance to the player ball when created. */
     public static final float MINIMUM_DISTANCE_TO_PLAYER = 100;
 
+    private float speedX, speedY;
+
     /**
      * Creates this enemy ball.
      * @param game The game.
@@ -32,5 +35,25 @@ public class Enemy extends SpriteActor {
     public Enemy(Collision game) {
         super(game, "enemy.png");
         setRandomPositionFarFromPlayer(MINIMUM_DISTANCE_TO_PLAYER);
+
+        // Choose the initial direction and speed
+        float angle = MathUtils.random(MathUtils.PI);
+        speedX = MathUtils.cos(angle) * 100;
+        speedY = MathUtils.sin(angle) * 100;
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        // Move the ball
+        moveBy(speedX * delta, speedY * delta);
+
+        // Bounce the ball off the borders of the window
+        if(getX() < 0 || getRight() > game.getWidth()) speedX = -speedX;
+        if(getY() < 0 || getTop() > game.getHeight()) speedY = -speedY;
+
+        // Ensure the ball is inside the window
+        keepInsideWindow();
     }
 }

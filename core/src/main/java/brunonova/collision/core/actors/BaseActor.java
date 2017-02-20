@@ -17,6 +17,8 @@
 package brunonova.collision.core.actors;
 
 import brunonova.collision.core.Collision;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 
@@ -51,5 +53,42 @@ public abstract class BaseActor extends Actor {
      */
     public final void centerOnScreen() {
         setPosition(game.getWidth() / 2, game.getHeight() / 2, Align.center);
+    }
+
+    /**
+     * Positions the actor in a random position on the screen.
+     */
+    public final void setRandomPosition() {
+        float x = MathUtils.random(0, game.getWidth() - getWidth());
+        float y = MathUtils.random(0, game.getHeight() - getHeight());
+        setPosition(x, y);
+    }
+
+    /**
+     * Positions the actor in a random position on the screen at a minimum
+     * distance from the specified point.
+     * @param minDistance The minimum distance from the specified point.
+     * @param x X coordinate of the point.
+     * @param y Y coordinate of the point.
+     */
+    public final void setRandomPositionFarFromPoint(float minDistance, float x, float y) {
+        do {
+            setRandomPosition();
+        } while(Vector2.dst(getX(), getY(), x, y) < minDistance);
+    }
+
+    /**
+     * Positions the actor in a random position on the screen at a minimum
+     * distance from the player ball, if found.
+     * @param minDistance The minimum distance from the player.
+     */
+    public final void setRandomPositionFarFromPlayer(float minDistance) {
+        if(game.getGameScreen() != null && game.getGameScreen().getPlayer() != null) {
+            setRandomPositionFarFromPoint(minDistance,
+                    game.getGameScreen().getPlayer().getX(),
+                    game.getGameScreen().getPlayer().getY());
+        } else {
+            setRandomPosition();
+        }
     }
 }

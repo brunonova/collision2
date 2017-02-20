@@ -22,7 +22,15 @@ import brunonova.collision.core.Collision;
  * An enemy ball.
  */
 public class Enemy extends SpriteActor {
+    /** The minimum distance to the player ball when created. */
+    public static final float MINIMUM_DISTANCE_TO_PLAYER = 100;
+
+    /**
+     * Creates this enemy ball.
+     * @param game The game.
+     */
     public Enemy(Collision game) {
         super(game, "enemy.png");
+        setRandomPositionFarFromPlayer(MINIMUM_DISTANCE_TO_PLAYER);
     }
 }

@@ -34,9 +34,11 @@ public class Collision extends Game {
 	private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private AssetManager assetManager;
-    private GameScreen gameScreen;
     private final int width;
     private final int height;
+
+    // Screens
+    private GameScreen gameScreen;
 
     /**
      * Creates the game.
@@ -140,5 +142,13 @@ public class Collision extends Game {
      */
     public int getHeight() {
         return height;
+    }
+
+    /**
+     * Returns the actual game screen.
+     * @return The game screen.
+     */
+    public GameScreen getGameScreen() {
+        return gameScreen;
     }
 }

@@ -34,6 +34,8 @@ public final class Constants {
     public static final int WINDOW_HEIGHT = 600;
     /** The background color of the windows. */
     public static final Color BACKGROUND_COLOR = new Color(0.75f, 0.75f, 0.75f, 1);
+    /** The number of enemy balls present when the game starts. */
+    public static final int STARTING_NUMBER_OF_ENEMY_BALLS = 3;
 
     private static final String TAG = Constants.class.getName();
     private static String version;

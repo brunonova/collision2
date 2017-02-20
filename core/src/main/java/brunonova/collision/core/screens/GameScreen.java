@@ -17,9 +17,13 @@
 package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
+import brunonova.collision.core.Constants;
+import brunonova.collision.core.actors.Enemy;
 import brunonova.collision.core.actors.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -28,6 +32,8 @@ import com.badlogic.gdx.Input;
 public class GameScreen extends BaseScreen {
     /** The player ball. */
     private Player player;
+    /** The enemy balls. */
+    private List<Enemy> enemies;
 
     public GameScreen(Collision game) {
         super(game);
@@ -37,6 +43,10 @@ public class GameScreen extends BaseScreen {
     public void create() {
         super.create();
         player = addActor(new Player(game));
+        enemies = new LinkedList<>();
+        for(int i = 0; i < Constants.STARTING_NUMBER_OF_ENEMY_BALLS; i++) {
+            enemies.add(addActor(new Enemy(game)));
+        }
     }
 
     @Override
@@ -64,5 +74,21 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+    }
+
+    /**
+     * Returns the player ball.
+     * @return The player ball.
+     */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * Returns the enemy balls.
+     * @return List of enemy balls.
+     */
+    public List<Enemy> getEnemies() {
+        return enemies;
     }
 }

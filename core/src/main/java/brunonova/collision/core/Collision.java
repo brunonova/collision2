@@ -76,9 +76,9 @@ public class Collision extends Game {
 	@Override
 	public void dispose() {
         super.dispose();
-        assetManager.dispose();
-        shapeRenderer.dispose();
-		batch.dispose();
+        if(assetManager != null) assetManager.dispose();
+        if(shapeRenderer != null) shapeRenderer.dispose();
+        if(batch != null) batch.dispose();
 	}
 
     /**

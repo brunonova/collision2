@@ -151,7 +151,7 @@ public abstract class BaseScreen implements Screen {
      */
     @Override
     public void dispose() {
-        stage.dispose();
+        if(stage != null) stage.dispose();
         created = false;
     }
 

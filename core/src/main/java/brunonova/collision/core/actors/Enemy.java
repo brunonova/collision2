@@ -25,6 +25,12 @@ import com.badlogic.gdx.math.MathUtils;
 public class Enemy extends SpriteActor {
     /** The minimum distance to the player ball when created. */
     public static final float MINIMUM_DISTANCE_TO_PLAYER = 100;
+    /** Initial speed of the enemy balls on the easy mode. */
+    public static final float SPEED_EASY = 200;
+    /** Initial speed of the enemy balls on the medium mode. */
+    public static final float SPEED_MEDIUM = 300;
+    /** Initial speed of the enemy balls on the hard mode. */
+    public static final float SPEED_HARD = 400;
 
     private float speedX, speedY;
 
@@ -38,8 +44,8 @@ public class Enemy extends SpriteActor {
 
         // Choose the initial direction and speed
         float angle = MathUtils.random(MathUtils.PI);
-        speedX = MathUtils.cos(angle) * 100;
-        speedY = MathUtils.sin(angle) * 100;
+        speedX = MathUtils.cos(angle) * SPEED_EASY;
+        speedY = MathUtils.sin(angle) * SPEED_EASY;
     }
 
     @Override

@@ -22,8 +22,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 
@@ -95,8 +101,29 @@ public class Collision extends Game {
         assetManager.load(RES_PATH + "/images/player.png", Texture.class);
         assetManager.load(RES_PATH + "/images/enemy.png", Texture.class);
 
+        // Load fonts
+        FileHandleResolver resolver = new InternalFileHandleResolver();
+        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+        loadFont("font-hud.ttf", "Ubuntu-M.ttf", 22);
+
         // Block to load all assets synchronously
         assetManager.finishLoading();
+    }
+
+    /**
+     * Loads the font with the specified properties.
+     * @param name The name to be used to retrieve the font from the asset
+     *             manager (it should include ".ttf").
+     * @param fileName The name of the file to load in the "fonts" folder.
+     * @param size The size of the font.
+     */
+    private void loadFont(String name, String fileName, int size) {
+        FreetypeFontLoader.FreeTypeFontLoaderParameter font = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        font.fontFileName = RES_PATH + "/fonts/" + fileName;
+        font.fontParameters.size = size;
+        font.fontParameters.hinting = FreeTypeFontGenerator.Hinting.AutoFull;
+        assetManager.load(name, BitmapFont.class, font);
     }
 
     /**
@@ -106,6 +133,15 @@ public class Collision extends Game {
      */
     public Texture getImage(String fileName) {
         return assetManager.get(RES_PATH + "/images/" + fileName, Texture.class);
+    }
+
+    /**
+     * Returns the font with the specified name.
+     * @param fontName Name of the font.
+     * @return The font.
+     */
+    public BitmapFont getFont(String fontName) {
+        return assetManager.get(fontName, BitmapFont.class);
     }
 
     /**

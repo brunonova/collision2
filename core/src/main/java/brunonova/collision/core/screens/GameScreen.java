@@ -22,6 +22,9 @@ import brunonova.collision.core.actors.Enemy;
 import brunonova.collision.core.actors.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.Align;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,6 +41,8 @@ public class GameScreen extends BaseScreen {
     private float time;
     /** Time remaining to add a new enemy ball. */
     private float timerNewEnemy;
+    /** Font used on the HUD. */
+    private BitmapFont hudFont;
 
     public GameScreen(Collision game) {
         super(game);
@@ -47,13 +52,17 @@ public class GameScreen extends BaseScreen {
     public void create() {
         super.create();
 
+        // Setup the fonts
+        hudFont = game.getFont("font-hud.ttf");
+        hudFont.setColor(Color.BLACK);
+
         // Add the player
         player = addActor(new Player(game));
 
         // Add the enemy balls
         enemies = new LinkedList<>();
         for(int i = 0; i < Constants.STARTING_NUMBER_OF_ENEMY_BALLS; i++) {
-            enemies.add(addActor(new Enemy(game)));
+            addEnemy();
         }
 
         // Set timers
@@ -107,13 +116,37 @@ public class GameScreen extends BaseScreen {
         // Time to add another enemy ball?
         if(timerNewEnemy <= 0) {
             timerNewEnemy += game.getCurrentDifficulty().getNewEnemyInterval();
-            enemies.add(addActor(new Enemy(game)));
+            addEnemy();
         }
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+
+        // Draw the HUD
+        batch.begin();
+
+        // Draw the time
+        hudFont.draw(batch, "Time: " + ((int) time), 10, game.getHeight() - 15);
+
+        // Draw the number of enemy balls (100px width, right aligned)
+        hudFont.draw(batch, "Balls: " + enemies.size(), game.getWidth() - 110,
+                     game.getHeight() - 15, 100, Align.right, false);
+
+        batch.end();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
+
+    /**
+     * Adds a new enemy ball.
+     */
+    private void addEnemy() {
+        enemies.add(addActor(new Enemy(game)));
     }
 
     private void gameOver() {

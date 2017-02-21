@@ -29,12 +29,6 @@ public class Enemy extends Ball {
     public static final float MINIMUM_DISTANCE_TO_PLAYER = 100;
     /** Mass of the ball (used when balls collide). */
     public static final float MASS = 1;
-    /** Initial speed of the enemy balls on the easy mode. */
-    public static final float SPEED_EASY = 200;
-    /** Initial speed of the enemy balls on the medium mode. */
-    public static final float SPEED_MEDIUM = 300;
-    /** Initial speed of the enemy balls on the hard mode. */
-    public static final float SPEED_HARD = 400;
 
     private float speedX = 0;
     private float speedY = 0;

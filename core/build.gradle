@@ -5,6 +5,7 @@ sourceCompatibility = 1.8
 
 dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 }
 
 task createProperties(dependsOn: processResources) << {

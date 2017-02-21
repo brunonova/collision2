@@ -33,10 +33,9 @@ public abstract class Ball extends SpriteActor {
      * @param game The game.
      * @param imageName File name of the image of the actor.
      */
-    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Ball(Collision game, String imageName) {
         super(game, imageName);
-        boundingCircle = new Circle(0, 0, getWidth() / 2);
+        boundingCircle = new Circle(0, 0, getRadius());
         updateBoundingCircle();
     }
 
@@ -58,7 +57,15 @@ public abstract class Ball extends SpriteActor {
     /**
      * Updates the position of the bounding circle.
      */
-    protected void updateBoundingCircle() {
+    protected final void updateBoundingCircle() {
         boundingCircle.setPosition(getX(Align.center), getY(Align.center));
+    }
+
+    /**
+     * Returns the radius of the ball.
+     * @return The radius of the ball.
+     */
+    public final float getRadius() {
+        return getWidth() / 2;
     }
 }

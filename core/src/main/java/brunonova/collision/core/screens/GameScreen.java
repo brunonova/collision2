@@ -70,6 +70,17 @@ public class GameScreen extends BaseScreen {
             Gdx.app.exit();
         }
 
+        // Detect collisions between enemy balls
+        for(int i = 0; i < enemies.size() - 1; i++) {
+            for(int j = i + 1; j < enemies.size(); j++) {
+                Enemy a = enemies.get(i);
+                Enemy b = enemies.get(j);
+                if(a.overlaps(b)) {
+                    Enemy.bounceBalls(a, b);
+                }
+            }
+        }
+
         // Detect collision between player and enemy balls
         for(Enemy enemy: enemies) {
             if(player.overlaps(enemy)) {

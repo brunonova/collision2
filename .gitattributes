@@ -1,7 +1,7 @@
 *.java              text
 *.properties        text
 *.md                text
-gradle.properties   text
+*.properties        text
 settings.gradle     text
 
 *.bat               eol=crlf

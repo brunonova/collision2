@@ -47,8 +47,8 @@ public class Enemy extends Ball {
 
         // Choose the initial direction and speed
         float angle = MathUtils.random(MathUtils.PI);
-        speedX = MathUtils.cos(angle) * SPEED_EASY;
-        speedY = MathUtils.sin(angle) * SPEED_EASY;
+        speedX = MathUtils.cos(angle) * game.getCurrentDifficulty().getEnemySpeed();
+        speedY = MathUtils.sin(angle) * game.getCurrentDifficulty().getEnemySpeed();
     }
 
     @Override

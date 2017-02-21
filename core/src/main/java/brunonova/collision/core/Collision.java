@@ -36,6 +36,7 @@ public class Collision extends Game {
     private AssetManager assetManager;
     private final int width;
     private final int height;
+    private Difficulty currentDifficulty;
 
     // Screens
     private GameScreen gameScreen;
@@ -55,6 +56,9 @@ public class Collision extends Game {
 		batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         loadAssets();
+
+        setCurrentDifficulty(Difficulty.MEDIUM);
+
         gameScreen = new GameScreen(this);
         setScreen(gameScreen);
 	}
@@ -142,6 +146,22 @@ public class Collision extends Game {
      */
     public int getHeight() {
         return height;
+    }
+
+    /**
+     * Returns the current difficulty level.
+     * @return Current difficulty level.
+     */
+    public Difficulty getCurrentDifficulty() {
+        return currentDifficulty;
+    }
+
+    /**
+     * Sets the current difficulty level.
+     * @param currentDifficulty The new difficulty level.
+     */
+    public void setCurrentDifficulty(Difficulty currentDifficulty) {
+        this.currentDifficulty = currentDifficulty;
     }
 
     /**

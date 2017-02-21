@@ -31,6 +31,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.I18NBundle;
 
 
 /**
@@ -40,6 +41,7 @@ public class Collision extends Game {
 	private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private AssetManager assetManager;
+    private I18NBundle i18n;
     private final int width;
     private final int height;
     private Difficulty currentDifficulty;
@@ -97,6 +99,9 @@ public class Collision extends Game {
     private void loadAssets() {
         assetManager = new AssetManager();
 
+        // Load i18n bundle
+        i18n = I18NBundle.createBundle(Gdx.files.internal(RES_PATH + "/i18n/Messages"));
+
         // Load images
         assetManager.load(RES_PATH + "/images/player.png", Texture.class);
         assetManager.load(RES_PATH + "/images/enemy.png", Texture.class);
@@ -142,6 +147,20 @@ public class Collision extends Game {
      */
     public BitmapFont getFont(String fontName) {
         return assetManager.get(fontName, BitmapFont.class);
+    }
+
+    /**
+     * Translates the given key to the current language.
+     * @param key Key of the string to translate.
+     * @param args Arguments of the key.
+     * @return Translated string.
+     */
+    public String t(String key, Object... args) {
+        if(args.length == 0) {
+            return i18n.get(key);
+        } else {
+            return i18n.format(key, args);
+        }
     }
 
     /**

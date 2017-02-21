@@ -128,10 +128,10 @@ public class GameScreen extends BaseScreen {
         batch.begin();
 
         // Draw the time
-        hudFont.draw(batch, "Time: " + ((int) time), 10, game.getHeight() - 15);
+        hudFont.draw(batch, game.t("hud.time", (int) time), 10, game.getHeight() - 15);
 
         // Draw the number of enemy balls (100px width, right aligned)
-        hudFont.draw(batch, "Balls: " + enemies.size(), game.getWidth() - 110,
+        hudFont.draw(batch, game.t("hud.balls", enemies.size()), game.getWidth() - 110,
                      game.getHeight() - 15, 100, Align.right, false);
 
         batch.end();

@@ -19,6 +19,7 @@ package brunonova.collision.core.actors;
 import brunonova.collision.core.Collision;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 /**
  * An enemy ball.
@@ -35,35 +36,39 @@ public class Enemy extends Ball {
     /** Initial speed of the enemy balls on the hard mode. */
     public static final float SPEED_HARD = 400;
 
-    private float speedX, speedY;
+    private float speedX = 0;
+    private float speedY = 0;
+    private boolean enabled = false;
 
     /**
      * Creates this enemy ball.
      * @param game The game.
      */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Enemy(Collision game) {
         super(game, "enemy.png");
         setRandomPositionFarFromPlayer(MINIMUM_DISTANCE_TO_PLAYER);
 
-        // Choose the initial direction and speed
-        float angle = MathUtils.random(MathUtils.PI);
-        speedX = MathUtils.cos(angle) * game.getCurrentDifficulty().getEnemySpeed();
-        speedY = MathUtils.sin(angle) * game.getCurrentDifficulty().getEnemySpeed();
+        // Set ball transparent, fade-in during 1 second then enable the ball
+        getColor().a = 0;
+        addAction(Actions.sequence(Actions.fadeIn(1), Actions.run(this::enable)));
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
 
-        // Move the ball
-        moveBy(speedX * delta, speedY * delta);
+        if(enabled) {
+            // Move the ball
+            moveBy(speedX * delta, speedY * delta);
 
-        // Bounce the ball off the borders of the window
-        if(getX() < 0 || getRight() > game.getWidth()) speedX = -speedX;
-        if(getY() < 0 || getTop() > game.getHeight()) speedY = -speedY;
+            // Bounce the ball off the borders of the window
+            if(getX() < 0 || getRight() > game.getWidth()) speedX = -speedX;
+            if(getY() < 0 || getTop() > game.getHeight()) speedY = -speedY;
 
-        // Ensure the ball is inside the window
-        keepInsideWindow();
+            // Ensure the ball is inside the window
+            keepInsideWindow();
+        }
     }
 
     /**
@@ -123,5 +128,25 @@ public class Enemy extends Ball {
         b1.speedY = speed1.y;
         b2.speedX = speed2.x;
         b2.speedY = speed2.y;
+    }
+
+    /**
+     * Enables the ball.
+     */
+    private void enable() {
+        enabled = true;
+
+        // Choose the initial direction and speed
+        float angle = MathUtils.random(MathUtils.PI);
+        speedX = MathUtils.cos(angle) * game.getCurrentDifficulty().getEnemySpeed();
+        speedY = MathUtils.sin(angle) * game.getCurrentDifficulty().getEnemySpeed();
+    }
+
+    /**
+     * Returns whether the ball is enabled and sensible to collisions.
+     * @return {@code true} if the ball is enabled.
+     */
+    public boolean isEnabled() {
+        return enabled;
     }
 }

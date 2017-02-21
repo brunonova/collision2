@@ -34,6 +34,10 @@ public class GameScreen extends BaseScreen {
     private Player player;
     /** The enemy balls. */
     private List<Enemy> enemies;
+    /** Time since the game started. */
+    private float time;
+    /** Time remaining to add a new enemy ball. */
+    private float timerNewEnemy;
 
     public GameScreen(Collision game) {
         super(game);
@@ -42,11 +46,19 @@ public class GameScreen extends BaseScreen {
     @Override
     public void create() {
         super.create();
+
+        // Add the player
         player = addActor(new Player(game));
+
+        // Add the enemy balls
         enemies = new LinkedList<>();
         for(int i = 0; i < Constants.STARTING_NUMBER_OF_ENEMY_BALLS; i++) {
             enemies.add(addActor(new Enemy(game)));
         }
+
+        // Set timers
+        time = 0;
+        timerNewEnemy = game.getCurrentDifficulty().getNewEnemyInterval();
     }
 
     @Override
@@ -65,6 +77,10 @@ public class GameScreen extends BaseScreen {
     public void act(float delta) {
         super.act(delta);
 
+        // Update timers
+        time += delta;
+        timerNewEnemy -= delta;
+
         // Exit if the Escape key is presses
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
@@ -75,7 +91,7 @@ public class GameScreen extends BaseScreen {
             for(int j = i + 1; j < enemies.size(); j++) {
                 Enemy a = enemies.get(i);
                 Enemy b = enemies.get(j);
-                if(a.overlaps(b)) {
+                if(a.isEnabled() && b.isEnabled() && a.overlaps(b)) {
                     Enemy.bounceBalls(a, b);
                 }
             }
@@ -83,9 +99,15 @@ public class GameScreen extends BaseScreen {
 
         // Detect collision between player and enemy balls
         for(Enemy enemy: enemies) {
-            if(player.overlaps(enemy)) {
+            if(enemy.isEnabled() && player.overlaps(enemy)) {
                 gameOver();
             }
+        }
+
+        // Time to add another enemy ball?
+        if(timerNewEnemy <= 0) {
+            timerNewEnemy += game.getCurrentDifficulty().getNewEnemyInterval();
+            enemies.add(addActor(new Enemy(game)));
         }
     }
 

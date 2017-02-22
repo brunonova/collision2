@@ -61,4 +61,13 @@ public class Player extends Ball {
             keepInsideWindow();  // ensure the player is inside of the window
         }
     }
+
+    /**
+     * Returns whether the player overlaps (collides with) the specified coin.
+     * @param coin The coin.
+     * @return {@code true} if the player and coin overlap.
+     */
+    public boolean overlaps(Coin coin) {
+        return boundingCircle.overlaps(coin.boundingCircle);
+    }
 }

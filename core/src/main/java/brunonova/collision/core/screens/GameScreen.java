@@ -18,8 +18,10 @@ package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
 import brunonova.collision.core.Constants;
+import brunonova.collision.core.actors.Coin;
 import brunonova.collision.core.actors.Enemy;
 import brunonova.collision.core.actors.Player;
+import brunonova.collision.core.enums.GameMode;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -37,8 +39,12 @@ public class GameScreen extends BaseScreen {
     private Player player;
     /** The enemy balls. */
     private List<Enemy> enemies;
+    /** The coin for the "Coins" mode. */
+    private Coin coin;
     /** Time since the game started. */
     private float time;
+    /** The number of collected coins for the "Coins" mode. */
+    private int coins;
     /** Time remaining to add a new enemy ball. */
     private float timerNewEnemy;
     /** Font used on the HUD. */
@@ -65,9 +71,15 @@ public class GameScreen extends BaseScreen {
             addEnemy();
         }
 
-        // Set timers
+        // Create the coin, if in "Coins" mode
+        if(game.getGameMode() == GameMode.COINS) {
+            coin = addActor(new Coin(game));
+        }
+
+        // Set counters and timers
+        coins = 0;
         time = 0;
-        timerNewEnemy = game.getCurrentDifficulty().getNewEnemyInterval();
+        timerNewEnemy = game.getDifficulty().getNewEnemyInterval();
     }
 
     @Override
@@ -95,6 +107,17 @@ public class GameScreen extends BaseScreen {
             Gdx.app.exit();
         }
 
+        // Detect collision between player and coin
+        if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
+            coins++;
+            coin.setRandomPositionFarFromPlayer(Coin.MINIMUM_DISTANCE_TO_PLAYER);
+
+            // Add a new enemy ball?
+            if(coins % game.getDifficulty().getNewEnemyCoins() == 0) {
+                addEnemy();
+            }
+        }
+
         // Detect collisions between enemy balls
         for(int i = 0; i < enemies.size() - 1; i++) {
             for(int j = i + 1; j < enemies.size(); j++) {
@@ -114,8 +137,8 @@ public class GameScreen extends BaseScreen {
         }
 
         // Time to add another enemy ball?
-        if(timerNewEnemy <= 0) {
-            timerNewEnemy += game.getCurrentDifficulty().getNewEnemyInterval();
+        if(game.getGameMode() == GameMode.TIME && timerNewEnemy <= 0) {
+            timerNewEnemy += game.getDifficulty().getNewEnemyInterval();
             addEnemy();
         }
     }
@@ -127,14 +150,21 @@ public class GameScreen extends BaseScreen {
         // Draw the HUD
         batch.begin();
 
-        // Draw the time
-        hudFont.draw(batch, game.t("hud.time", (int) time), 10, game.getHeight() - 15);
+        // Draw the score (time or coins)
+        switch(game.getGameMode()) {
+            case TIME:
+                hudFont.draw(batch, game.t("hud.time", (int) time), 10, game.getHeight() - 15);
+                break;
+            case COINS:
+                hudFont.draw(batch, game.t("hud.coins", coins), 10, game.getHeight() - 15);
+                break;
+        }
 
         // Draw the number of enemy balls (100px width, right aligned)
         hudFont.draw(batch, game.t("hud.balls", enemies.size()), game.getWidth() - 110,
                      game.getHeight() - 15, 100, Align.right, false);
 
-        // Draw the FPS (if enabled)
+        // Draw the FPS, if enabled
         if(game.isShowFPS()) {
             hudFont.draw(batch, game.t("hud.fps", Gdx.graphics.getFramesPerSecond()), 10, 25);
         }

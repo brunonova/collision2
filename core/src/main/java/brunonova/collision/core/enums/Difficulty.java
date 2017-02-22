@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package brunonova.collision.core;
+package brunonova.collision.core.enums;
 
 /**
  * Enumeration of the difficulty levels and their properties.

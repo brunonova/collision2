@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  * An actor that draws a sprite
  */
 public abstract class SpriteActor extends BaseActor {
+    /** The sprite. */
     protected Sprite sprite;
 
     /**

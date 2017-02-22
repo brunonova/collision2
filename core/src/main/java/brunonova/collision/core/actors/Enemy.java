@@ -72,6 +72,7 @@ public class Enemy extends Ball {
      */
     public static void bounceBalls(Enemy b1, Enemy b2) {
         // Warning: LibGDX Vector2's operations modify the vector!
+        // TODO: use another Vector2 implementation?
         Vector2 pos1 = new Vector2(b1.getX(), b1.getY());
         Vector2 pos2 = new Vector2(b2.getX(), b2.getY());
         Vector2 delta = pos1.cpy().sub(pos2);
@@ -132,8 +133,8 @@ public class Enemy extends Ball {
 
         // Choose the initial direction and speed
         float angle = MathUtils.random(MathUtils.PI);
-        speedX = MathUtils.cos(angle) * game.getCurrentDifficulty().getEnemySpeed();
-        speedY = MathUtils.sin(angle) * game.getCurrentDifficulty().getEnemySpeed();
+        speedX = MathUtils.cos(angle) * game.getDifficulty().getEnemySpeed();
+        speedY = MathUtils.sin(angle) * game.getDifficulty().getEnemySpeed();
     }
 
     /**

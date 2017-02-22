@@ -16,8 +16,10 @@
  */
 package brunonova.collision.core;
 
+import brunonova.collision.core.enums.Difficulty;
 import brunonova.collision.core.screens.GameScreen;
 import static brunonova.collision.core.Constants.RES_PATH;
+import brunonova.collision.core.enums.GameMode;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -46,8 +48,9 @@ public class Collision extends Game {
     private final int height;
 
     // Options
-    private Difficulty currentDifficulty;
-    private boolean showFPS = true;
+    private Difficulty difficulty;
+    private GameMode gameMode = GameMode.COINS;  // TODO: parameterize this
+    private boolean showFPS = true;  // TODO: parameterize this
 
     // Screens
     private GameScreen gameScreen;
@@ -68,7 +71,7 @@ public class Collision extends Game {
         shapeRenderer = new ShapeRenderer();
         loadAssets();
 
-        setCurrentDifficulty(Difficulty.MEDIUM);
+        setDifficulty(Difficulty.MEDIUM);
 
         gameScreen = new GameScreen(this);
         setScreen(gameScreen);
@@ -108,6 +111,7 @@ public class Collision extends Game {
         // Load images
         assetManager.load(RES_PATH + "/images/player.png", Texture.class);
         assetManager.load(RES_PATH + "/images/enemy.png", Texture.class);
+        assetManager.load(RES_PATH + "/images/coin.png", Texture.class);
 
         // Load fonts
         FileHandleResolver resolver = new InternalFileHandleResolver();
@@ -210,16 +214,32 @@ public class Collision extends Game {
      * Returns the current difficulty level.
      * @return Current difficulty level.
      */
-    public Difficulty getCurrentDifficulty() {
-        return currentDifficulty;
+    public Difficulty getDifficulty() {
+        return difficulty;
     }
 
     /**
      * Sets the current difficulty level.
-     * @param currentDifficulty The new difficulty level.
+     * @param difficulty The new difficulty level.
      */
-    public void setCurrentDifficulty(Difficulty currentDifficulty) {
-        this.currentDifficulty = currentDifficulty;
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    /**
+     * Returns the currently selected game mode.
+     * @return Current game mode.
+     */
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    /**
+     * Sets the current game mode.
+     * @param gameMode The new game mode.
+     */
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
     }
 
     /**

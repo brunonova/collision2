@@ -44,7 +44,10 @@ public class Collision extends Game {
     private I18NBundle i18n;
     private final int width;
     private final int height;
+
+    // Options
     private Difficulty currentDifficulty;
+    private boolean showFPS = true;
 
     // Screens
     private GameScreen gameScreen;
@@ -217,6 +220,22 @@ public class Collision extends Game {
      */
     public void setCurrentDifficulty(Difficulty currentDifficulty) {
         this.currentDifficulty = currentDifficulty;
+    }
+
+    /**
+     * Returns whether the FPS should be displayed in the game screen.
+     * @return {@code true} to display the game screen.
+     */
+    public boolean isShowFPS() {
+        return showFPS;
+    }
+
+    /**
+     * Sets whether the FPS should be displayed in the game screen.
+     * @param showFPS {@code true} to display the game screen.
+     */
+    public void setShowFPS(boolean showFPS) {
+        this.showFPS = showFPS;
     }
 
     /**

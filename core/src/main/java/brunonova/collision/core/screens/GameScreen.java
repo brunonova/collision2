@@ -134,6 +134,11 @@ public class GameScreen extends BaseScreen {
         hudFont.draw(batch, game.t("hud.balls", enemies.size()), game.getWidth() - 110,
                      game.getHeight() - 15, 100, Align.right, false);
 
+        // Draw the FPS (if enabled)
+        if(game.isShowFPS()) {
+            hudFont.draw(batch, game.t("hud.fps", Gdx.graphics.getFramesPerSecond()), 10, 25);
+        }
+
         batch.end();
     }
 

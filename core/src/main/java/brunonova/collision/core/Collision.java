@@ -20,6 +20,7 @@ import brunonova.collision.core.enums.Difficulty;
 import brunonova.collision.core.screens.GameScreen;
 import static brunonova.collision.core.Constants.RES_PATH;
 import brunonova.collision.core.enums.GameMode;
+import brunonova.collision.core.screens.BaseScreen;
 import brunonova.collision.core.screens.PauseScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -27,6 +28,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -34,7 +37,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 /**
@@ -119,7 +125,7 @@ public class Collision extends Game {
         assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
         loadFont("font-hud.ttf", "Ubuntu-M.ttf", 22);
-        loadFont("font-pause.ttf", "Ubuntu-B.ttf", 96);
+        loadFont("font-pause.ttf", "Ubuntu-B.ttf", 96, Color.BLACK, 5, 5);
 
         // Block to load all assets synchronously
         assetManager.finishLoading();
@@ -137,6 +143,28 @@ public class Collision extends Game {
         font.fontFileName = RES_PATH + "/fonts/" + fileName;
         font.fontParameters.size = size;
         font.fontParameters.hinting = FreeTypeFontGenerator.Hinting.AutoFull;
+        assetManager.load(name, BitmapFont.class, font);
+    }
+
+    /**
+     * Loads the font with the specified properties.
+     * <p>The font will have a shadow.</p>
+     * @param name The name to be used to retrieve the font from the asset
+     *             manager (it should include ".ttf").
+     * @param fileName The name of the file to load in the "fonts" folder.
+     * @param size The size of the font.
+     * @param shadowColor The color of the shadow.
+     * @param shadowOffsetX Offset of the shadow in the X axis.
+     * @param shadowOffsetY Offset of the shadow in the Y axis.
+     */
+    private void loadFont(String name, String fileName, int size, Color shadowColor, int shadowOffsetX, int shadowOffsetY) {
+        FreetypeFontLoader.FreeTypeFontLoaderParameter font = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        font.fontFileName = RES_PATH + "/fonts/" + fileName;
+        font.fontParameters.size = size;
+        font.fontParameters.hinting = FreeTypeFontGenerator.Hinting.AutoFull;
+        font.fontParameters.shadowColor = shadowColor;
+        font.fontParameters.shadowOffsetX = shadowOffsetX;
+        font.fontParameters.shadowOffsetY = shadowOffsetY;
         assetManager.load(name, BitmapFont.class, font);
     }
 
@@ -182,11 +210,40 @@ public class Collision extends Game {
 
     /**
      * Pauses the game by switching to the "PAUSE" screen.
+     * <p>This method should be called at the end of the {@code render()}
+     * method, or else the screenshot taken to be used as the background of the
+     * pause screen won't be correct.</p>
+     * @param screen The screen where the screenshot is taking place.
      */
-    public void pauseGame() {
+    public void pauseGame(BaseScreen screen) {
         if(pauseScreen == null) pauseScreen = new PauseScreen(this);
         pauseScreen.setPreviousScreen(getScreen());
+        pauseScreen.setBackground(takeScreenshot(screen));
         setScreen(pauseScreen);
+    }
+
+    /**
+     * Takes a screenshot of the viewport.
+     * <p>This method should be called at the end of the {@code render()}
+     * method, or else the screenshot won't be correct.</p>
+     * @param screen The screen where the screenshot is taking place.
+     * @return The screenshot as a texture.
+     */
+    public Texture takeScreenshot(BaseScreen screen) {
+        // Determine area of the viewport
+        Viewport viewport = screen.getViewport();
+        int x = viewport.getLeftGutterWidth();
+        int y = viewport.getTopGutterHeight();
+        int w = Gdx.graphics.getWidth() - viewport.getLeftGutterWidth() - viewport.getRightGutterWidth();
+        int h = Gdx.graphics.getHeight() - viewport.getTopGutterHeight() - viewport.getBottomGutterHeight();
+
+        // Take the screenshot
+        byte[] pixels = ScreenUtils.getFrameBufferPixels(x, y, w, h, true);
+
+        // Load the screenshot into a Pixmap, and then into a Texture
+        Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+        BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
+        return new Texture(pixmap);
     }
 
     /**

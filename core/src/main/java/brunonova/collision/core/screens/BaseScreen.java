@@ -28,6 +28,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 /**
@@ -185,5 +186,13 @@ public abstract class BaseScreen implements Screen {
     public final <T extends Actor> T addActor(T actor) {
         stage.addActor(actor);
         return actor;
+    }
+
+    /**
+     * Returns the viewport of the stage.
+     * @return The viewport.
+     */
+    public Viewport getViewport() {
+        return stage.getViewport();
     }
 }

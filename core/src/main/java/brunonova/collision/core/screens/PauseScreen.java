@@ -21,6 +21,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
@@ -35,6 +36,8 @@ import com.badlogic.gdx.utils.Align;
 public class PauseScreen extends BaseScreen {
     /** The screen to return to when the game is unpaused. */
     protected Screen previousScreen;
+    /** The (optional) background image. */
+    protected Texture background;
 
     /**
      * Creates the screen.
@@ -71,10 +74,28 @@ public class PauseScreen extends BaseScreen {
     public void act(float delta) {
         super.act(delta);
 
+        // Draw the screenshot of the previous screen, if set (half transparent)
+        if(background != null) {
+            batch.begin();
+            Color oldColor = batch.getColor();
+            Color newColor = oldColor.cpy();
+            newColor.a = 0.5f;
+            batch.setColor(newColor);
+            batch.draw(background, 0, 0, game.getWidth(), game.getHeight());
+            batch.setColor(oldColor);
+            batch.end();
+        }
+
         // Unpause the game when 'P' is pressed
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             game.setScreen(previousScreen);
         }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        background.dispose();
     }
 
     /**
@@ -91,5 +112,22 @@ public class PauseScreen extends BaseScreen {
      */
     public void setPreviousScreen(Screen previousScreen) {
         this.previousScreen = previousScreen;
+    }
+
+    /**
+     * Returns the background image.
+     * @return The background image.
+     */
+    public Texture getBackground() {
+        return background;
+    }
+
+    /**
+     * Sets the background image.
+     * @param background The new image.
+     */
+    public void setBackground(Texture background) {
+        if(this.background != null) this.background.dispose();
+        this.background = background;
     }
 }

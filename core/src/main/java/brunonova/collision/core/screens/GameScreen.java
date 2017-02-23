@@ -24,6 +24,7 @@ import brunonova.collision.core.actors.Player;
 import brunonova.collision.core.enums.GameMode;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Align;
@@ -49,6 +50,7 @@ public class GameScreen extends BaseScreen {
     private float timerNewEnemy;
     /** Font used on the HUD. */
     private BitmapFont hudFont;
+    private Sound coinSound;
 
     public GameScreen(Collision game) {
         super(game);
@@ -58,9 +60,12 @@ public class GameScreen extends BaseScreen {
     public void create() {
         super.create();
 
-        // Setup the fonts
+        // Prepare the font for the HUD
         hudFont = game.getFont("font-hud.ttf");
         hudFont.setColor(Color.BLACK);
+
+        // Prepare the sounds
+        coinSound = game.getSound("coin.mp3");
 
         // Add the player
         player = addActor(new Player(game));
@@ -111,6 +116,7 @@ public class GameScreen extends BaseScreen {
         if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
             coins++;
             coin.setRandomPositionFarFromPlayer(Coin.MINIMUM_DISTANCE_TO_PLAYER);
+            coinSound.play(game.getVolume());
 
             // Add a new enemy ball?
             if(coins % game.getDifficulty().getNewEnemyCoins() == 0) {

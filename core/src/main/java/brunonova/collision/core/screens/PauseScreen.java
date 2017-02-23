@@ -52,7 +52,7 @@ public class PauseScreen extends BaseScreen {
     public void create() {
         super.create();
 
-        // Setup the font
+        // Prepare the font
         BitmapFont font = game.getFont("font-pause.ttf");
 
         // Add the "PAUSE" label

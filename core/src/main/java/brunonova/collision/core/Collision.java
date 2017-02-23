@@ -28,6 +28,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -58,6 +59,7 @@ public class Collision extends Game {
     private Difficulty difficulty;
     private GameMode gameMode = GameMode.COINS;  // TODO: parameterize this
     private boolean showFPS = true;  // TODO: parameterize this
+    private float volume = 1;  // TODO: parameterize this
 
     // Screens
     private GameScreen gameScreen;
@@ -120,6 +122,9 @@ public class Collision extends Game {
         assetManager.load(RES_PATH + "/images/enemy.png", Texture.class);
         assetManager.load(RES_PATH + "/images/coin.png", Texture.class);
 
+        // Load sounds
+        assetManager.load(RES_PATH + "/sounds/coin.mp3", Sound.class);
+
         // Load fonts
         FileHandleResolver resolver = new InternalFileHandleResolver();
         assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
@@ -175,6 +180,15 @@ public class Collision extends Game {
      */
     public Texture getImage(String fileName) {
         return assetManager.get(RES_PATH + "/images/" + fileName, Texture.class);
+    }
+
+    /**
+     * Returns the sound with the specified file name.
+     * @param fileName Name of the file.
+     * @return The sound.
+     */
+    public Sound getSound(String fileName) {
+        return assetManager.get(RES_PATH + "/sounds/" + fileName, Sound.class);
     }
 
     /**
@@ -332,6 +346,22 @@ public class Collision extends Game {
      */
     public void setShowFPS(boolean showFPS) {
         this.showFPS = showFPS;
+    }
+
+    /**
+     * Returns the current volume.
+     * @return Current volume level.
+     */
+    public float getVolume() {
+        return volume;
+    }
+
+    /**
+     * Sets the current volume.
+     * @param volume New volume level.
+     */
+    public void setVolume(float volume) {
+        this.volume = volume;
     }
 
     /**

@@ -107,6 +107,12 @@ public class GameScreen extends BaseScreen {
             Gdx.app.exit();
         }
 
+        // Pause the game when 'P' is pressed
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            game.pauseGame();
+            return;
+        }
+
         // Detect collision between player and coin
         if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
             coins++;

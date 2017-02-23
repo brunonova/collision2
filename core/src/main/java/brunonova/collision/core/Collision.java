@@ -20,6 +20,7 @@ import brunonova.collision.core.enums.Difficulty;
 import brunonova.collision.core.screens.GameScreen;
 import static brunonova.collision.core.Constants.RES_PATH;
 import brunonova.collision.core.enums.GameMode;
+import brunonova.collision.core.screens.PauseScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -54,6 +55,7 @@ public class Collision extends Game {
 
     // Screens
     private GameScreen gameScreen;
+    private PauseScreen pauseScreen;
 
     /**
      * Creates the game.
@@ -73,8 +75,7 @@ public class Collision extends Game {
 
         setDifficulty(Difficulty.MEDIUM);
 
-        gameScreen = new GameScreen(this);
-        setScreen(gameScreen);
+        startGame();
 	}
 
     @Override
@@ -118,6 +119,7 @@ public class Collision extends Game {
         assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
         loadFont("font-hud.ttf", "Ubuntu-M.ttf", 22);
+        loadFont("font-pause.ttf", "Ubuntu-B.ttf", 96);
 
         // Block to load all assets synchronously
         assetManager.finishLoading();
@@ -168,6 +170,23 @@ public class Collision extends Game {
         } else {
             return i18n.format(key, args);
         }
+    }
+
+    /**
+     * Starts the game by switching to the game screen.
+     */
+    public void startGame() {
+        if(gameScreen == null) gameScreen = new GameScreen(this);
+        setScreen(gameScreen);
+    }
+
+    /**
+     * Pauses the game by switching to the "PAUSE" screen.
+     */
+    public void pauseGame() {
+        if(pauseScreen == null) pauseScreen = new PauseScreen(this);
+        pauseScreen.setPreviousScreen(getScreen());
+        setScreen(pauseScreen);
     }
 
     /**

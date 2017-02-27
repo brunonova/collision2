@@ -18,7 +18,6 @@ package brunonova.collision.core.actors;
 
 import brunonova.collision.core.Collision;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 

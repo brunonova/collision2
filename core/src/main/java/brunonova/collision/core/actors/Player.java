@@ -28,6 +28,8 @@ public class Player extends Ball {
     /** The speed of the player ball when using the keyboard (pixels/second). */
     public static final float KEYBOARD_SPEED = 400;
 
+    private boolean enabled = true;
+
     /**
      * Creates the player.
      * @param game The game.
@@ -41,24 +43,26 @@ public class Player extends Ball {
     public void act(float delta) {
         super.act(delta);
 
-        // Determine how many pixels to move the player by this frame
-        float dx = 0, dy = 0;
+        if(enabled) {
+            // Determine how many pixels to move the player by this frame
+            float dx = 0, dy = 0;
 
-        // Keyboard movement
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) dx -= KEYBOARD_SPEED * delta;
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) dx += KEYBOARD_SPEED * delta;
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) dy -= KEYBOARD_SPEED * delta;
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) dy += KEYBOARD_SPEED * delta;
+            // Keyboard movement
+            if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) dx -= KEYBOARD_SPEED * delta;
+            if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) dx += KEYBOARD_SPEED * delta;
+            if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) dy -= KEYBOARD_SPEED * delta;
+            if(Gdx.input.isKeyPressed(Input.Keys.UP)) dy += KEYBOARD_SPEED * delta;
 
-        // Mouse movement
-        // TODO: impose speed limit to avoid "teleporting"
-        dx += Gdx.input.getDeltaX();
-        dy -= Gdx.input.getDeltaY();
+            // Mouse movement
+            // TODO: impose speed limit to avoid "teleporting"
+            dx += Gdx.input.getDeltaX();
+            dy -= Gdx.input.getDeltaY();
 
-        // Move the player
-        if(dx != 0 || dy != 0) {
-            moveBy(dx, dy);
-            keepInsideWindow();  // ensure the player is inside of the window
+            // Move the player
+            if(dx != 0 || dy != 0) {
+                moveBy(dx, dy);
+                keepInsideWindow();  // ensure the player is inside of the window
+            }
         }
     }
 
@@ -69,5 +73,22 @@ public class Player extends Ball {
      */
     public boolean overlaps(Coin coin) {
         return boundingCircle.overlaps(coin.boundingCircle);
+    }
+
+    /**
+     * Returns whether the ball is enabled and responding to user input.
+     * @return {@code true} if the ball is enabled.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * whether the ball is enabled and responding to user input.
+     * @param enabled {@code true} to enable the ball, {@code false} to disable
+     *                it.
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

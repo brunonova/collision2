@@ -27,6 +27,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,6 +43,8 @@ public class GameScreen extends BaseScreen {
     private List<Enemy> enemies;
     /** The coin for the "Coins" mode. */
     private Coin coin;
+    /** Whether the game is ending (before the "Game Over" screen is shown). */
+    private boolean gameEnding = false;
     /** Time since the game started. */
     private float time;
     /** The number of collected coins for the "Coins" mode. */
@@ -50,8 +53,13 @@ public class GameScreen extends BaseScreen {
     private float timerNewEnemy;
     /** Font used on the HUD. */
     private BitmapFont hudFont;
+    /** Sound played when the player catches a coin. */
     private Sound coinSound;
 
+    /**
+     * Creates the screen.
+     * @param game The game.
+     */
     public GameScreen(Collision game) {
         super(game);
     }
@@ -82,6 +90,7 @@ public class GameScreen extends BaseScreen {
         }
 
         // Set counters and timers
+        gameEnding = false;
         coins = 0;
         time = 0;
         timerNewEnemy = game.getDifficulty().getNewEnemyInterval();
@@ -103,49 +112,51 @@ public class GameScreen extends BaseScreen {
     public void act(float delta) {
         super.act(delta);
 
-        // Update timers
-        time += delta;
-        timerNewEnemy -= delta;
+        if(!gameEnding) {
+            // Update timers
+            time += delta;
+            timerNewEnemy -= delta;
 
-        // Exit if the Escape key is presses
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit();
-        }
-
-        // Detect collision between player and coin
-        if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
-            coins++;
-            coin.setRandomPositionFarFromPlayer(Coin.MINIMUM_DISTANCE_TO_PLAYER);
-            coinSound.play(game.getVolume());
-
-            // Add a new enemy ball?
-            if(coins % game.getDifficulty().getNewEnemyCoins() == 0) {
-                addEnemy();
+            // Exit if the Escape key is presses
+            if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+                Gdx.app.exit();
             }
-        }
 
-        // Detect collisions between enemy balls
-        for(int i = 0; i < enemies.size() - 1; i++) {
-            for(int j = i + 1; j < enemies.size(); j++) {
-                Enemy a = enemies.get(i);
-                Enemy b = enemies.get(j);
-                if(a.isEnabled() && b.isEnabled() && a.overlaps(b)) {
-                    Enemy.bounceBalls(a, b);
+            // Detect collision between player and coin
+            if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
+                coins++;
+                coin.setRandomPositionFarFromPlayer(Coin.MINIMUM_DISTANCE_TO_PLAYER);
+                coinSound.play(game.getVolume());
+
+                // Add a new enemy ball?
+                if(coins % game.getDifficulty().getNewEnemyCoins() == 0) {
+                    addEnemy();
                 }
             }
-        }
 
-        // Detect collision between player and enemy balls
-        for(Enemy enemy: enemies) {
-            if(enemy.isEnabled() && player.overlaps(enemy)) {
-                gameOver();
+            // Detect collisions between enemy balls
+            for(int i = 0; i < enemies.size() - 1; i++) {
+                for(int j = i + 1; j < enemies.size(); j++) {
+                    Enemy a = enemies.get(i);
+                    Enemy b = enemies.get(j);
+                    if(a.isEnabled() && b.isEnabled() && a.overlaps(b)) {
+                        Enemy.bounceBalls(a, b);
+                    }
+                }
             }
-        }
 
-        // Time to add another enemy ball?
-        if(game.getGameMode() == GameMode.TIME && timerNewEnemy <= 0) {
-            timerNewEnemy += game.getDifficulty().getNewEnemyInterval();
-            addEnemy();
+            // Detect collision between player and enemy balls
+            for(Enemy enemy: enemies) {
+                if(enemy.isEnabled() && player.overlaps(enemy)) {
+                    gameOver();
+                }
+            }
+
+            // Time to add another enemy ball?
+            if(game.getGameMode() == GameMode.TIME && timerNewEnemy <= 0) {
+                timerNewEnemy += game.getDifficulty().getNewEnemyInterval();
+                addEnemy();
+            }
         }
     }
 
@@ -181,7 +192,7 @@ public class GameScreen extends BaseScreen {
         // This was put at the end of the "render" method so that the screenshot
         // taken by this method to be used as the background of the "PAUSE"
         // screen is complete.
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P) && !gameEnding) {
             game.pauseGame(this);
         }
     }
@@ -198,8 +209,27 @@ public class GameScreen extends BaseScreen {
         enemies.add(addActor(new Enemy(game)));
     }
 
+    /**
+     * Ends the game.
+     */
     private void gameOver() {
-        Gdx.app.exit();
+        gameEnding = true;
+
+        // Disable the player ball
+        player.setEnabled(false);
+
+        // Stop and disable all enemy balls
+        for(Enemy enemy: enemies) {
+            enemy.disable();
+        }
+
+        // Fade-out the player, then end the game
+        player.addAction(Actions.sequence(
+                Actions.fadeOut(2),
+                Actions.run(() -> {
+                    // Exit the game
+                    Gdx.app.exit();
+                })));
     }
 
     /**

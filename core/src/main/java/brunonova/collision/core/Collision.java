@@ -57,7 +57,7 @@ public class Collision extends Game {
 
     // Options
     private Difficulty difficulty;
-    private GameMode gameMode = GameMode.COINS;  // TODO: parameterize this
+    private GameMode gameMode = GameMode.TIME;  // TODO: parameterize this
     private boolean showFPS = true;  // TODO: parameterize this
     private float volume = 1;  // TODO: parameterize this
 

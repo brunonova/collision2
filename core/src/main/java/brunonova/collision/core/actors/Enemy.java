@@ -128,13 +128,21 @@ public class Enemy extends Ball {
     /**
      * Enables the ball.
      */
-    private void enable() {
+    public void enable() {
         enabled = true;
 
         // Choose the initial direction and speed
         float angle = MathUtils.random(MathUtils.PI);
         speedX = MathUtils.cos(angle) * game.getDifficulty().getEnemySpeed();
         speedY = MathUtils.sin(angle) * game.getDifficulty().getEnemySpeed();
+    }
+
+    /**
+     * Disables and stops the ball.
+     */
+    public void disable() {
+        enabled = false;
+        speedX = speedY = 0;
     }
 
     /**

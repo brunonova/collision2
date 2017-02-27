@@ -53,8 +53,11 @@ public class Enemy extends Ball {
         super.act(delta);
 
         if(enabled) {
+            // Get the factor to multiply the speed by
+            float factor = game.getGameScreen().getEnemyBallsSpeedFactor();
+
             // Move the ball
-            moveBy(speedX * delta, speedY * delta);
+            moveBy(speedX * delta * factor, speedY * delta * factor);
 
             // Bounce the ball off the borders of the window
             if(getX() < 0 || getRight() > game.getWidth()) speedX = -speedX;

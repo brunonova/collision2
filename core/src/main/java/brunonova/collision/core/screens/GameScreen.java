@@ -22,6 +22,7 @@ import brunonova.collision.core.actors.Bonus;
 import brunonova.collision.core.actors.Coin;
 import brunonova.collision.core.actors.Enemy;
 import brunonova.collision.core.actors.Player;
+import brunonova.collision.core.enums.BonusType;
 import brunonova.collision.core.enums.GameMode;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -68,6 +69,8 @@ public class GameScreen extends BaseScreen {
     private float timerNewEnemy;
     /** Time remaining to add a new bonus. */
     private float timerNewBonus;
+    /** Time until the {@link BonusType#SLOW_DOWN_ENEMIES} bonus is over. */
+    private float timerSlowDownEnemiesBonus;
 
     /**
      * Creates the screen.
@@ -111,6 +114,7 @@ public class GameScreen extends BaseScreen {
         time = 0;
         timerNewEnemy = game.getDifficulty().getNewEnemyInterval();
         timerNewBonus = MathUtils.random(Constants.NEW_BONUS_MIN_TIME, Constants.NEW_BONUS_MAX_TIME);
+        timerSlowDownEnemiesBonus = 0;
     }
 
     @Override
@@ -139,6 +143,7 @@ public class GameScreen extends BaseScreen {
             time += delta;
             timerNewEnemy -= delta;
             timerNewBonus -= delta;
+            timerSlowDownEnemiesBonus -= delta;
 
             // Detect collision between player and coin
             if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
@@ -231,6 +236,28 @@ public class GameScreen extends BaseScreen {
     }
 
     /**
+     * Returns whether the {@link BonusType#SLOW_DOWN_ENEMIES} is currently
+     * active.
+     * @return {@code true} if the bonus is active.
+     */
+    public boolean isSlowDownEnemiesBonusActive() {
+        return timerSlowDownEnemiesBonus > 0;
+    }
+
+    /**
+     * Returns the factor to multiply enemy balls speed by (based on the
+     * currently active bonus).
+     * @return The speed factor.
+     */
+    public float getEnemyBallsSpeedFactor() {
+        if(isSlowDownEnemiesBonusActive()) {
+            return 0.5f;
+        } else {
+            return 1f;
+        }
+    }
+
+    /**
      * Adds a new enemy ball.
      */
     private void addEnemy() {
@@ -246,7 +273,13 @@ public class GameScreen extends BaseScreen {
         bonus.hide();
         timerNewBonus = MathUtils.random(Constants.NEW_BONUS_MIN_TIME, Constants.NEW_BONUS_MAX_TIME);
 
-        // TODO: Give the bonus
+        // Select the bonus
+        BonusType type = BonusType.pickRandom();
+        switch(type) {
+            case SLOW_DOWN_ENEMIES:
+                timerSlowDownEnemiesBonus = type.getDuration();
+                break;
+        }
     }
 
     /**

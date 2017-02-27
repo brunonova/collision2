@@ -25,7 +25,9 @@ public enum BonusType {
     /** Slows down the enemy balls by 50%. */
     SLOW_DOWN_ENEMIES(6),
     /** Speeds up the enemy balls by 50%. */
-    SPEED_UP_ENEMIES(3);
+    SPEED_UP_ENEMIES(3),
+    /** Freezes the enemy balls in place. */
+    FREEZE_ENEMIES(5);
 
     private final float duration;
 

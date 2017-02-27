@@ -36,6 +36,10 @@ public final class Constants {
     public static final Color BACKGROUND_COLOR = new Color(0.75f, 0.75f, 0.75f, 1);
     /** The number of enemy balls present when the game starts. */
     public static final int STARTING_NUMBER_OF_ENEMY_BALLS = 3;
+    /** Minimum amount of time (seconds) for a new bonus to appear. */
+    public static final float NEW_BONUS_MIN_TIME = 3;
+    /** Maximum amount of time (seconds) for a new bonus to appear. */
+    public static final float NEW_BONUS_MAX_TIME = 10;
 
     private static final String TAG = Constants.class.getName();
     private static String version;

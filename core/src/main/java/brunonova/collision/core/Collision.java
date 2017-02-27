@@ -121,6 +121,7 @@ public class Collision extends Game {
         assetManager.load(RES_PATH + "/images/player.png", Texture.class);
         assetManager.load(RES_PATH + "/images/enemy.png", Texture.class);
         assetManager.load(RES_PATH + "/images/coin.png", Texture.class);
+        assetManager.load(RES_PATH + "/images/bonus.png", Texture.class);
 
         // Load sounds
         assetManager.load(RES_PATH + "/sounds/coin.mp3", Sound.class);

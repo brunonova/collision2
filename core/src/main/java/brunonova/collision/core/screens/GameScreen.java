@@ -18,6 +18,7 @@ package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
 import brunonova.collision.core.Constants;
+import brunonova.collision.core.actors.Bonus;
 import brunonova.collision.core.actors.Coin;
 import brunonova.collision.core.actors.Enemy;
 import brunonova.collision.core.actors.Player;
@@ -27,6 +28,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import java.util.LinkedList;
@@ -37,24 +39,35 @@ import java.util.List;
  * The screen of the game itself.
  */
 public class GameScreen extends BaseScreen {
+    // Actors
     /** The player ball. */
     private Player player;
     /** The enemy balls. */
     private List<Enemy> enemies;
     /** The coin for the "Coins" mode. */
     private Coin coin;
+    /** The bonus (only 1 bonus is created, and then it's reused). */
+    private Bonus bonus;
+
+    // Resources
+    /** Font used on the HUD. */
+    private BitmapFont hudFont;
+    /** Sound played when the player catches a coin. */
+    private Sound coinSound;
+
+    // Control variables
     /** Whether the game is ending (before the "Game Over" screen is shown). */
     private boolean gameEnding = false;
     /** Time since the game started. */
     private float time;
     /** The number of collected coins for the "Coins" mode. */
     private int coins;
+
+    // Timers
     /** Time remaining to add a new enemy ball. */
     private float timerNewEnemy;
-    /** Font used on the HUD. */
-    private BitmapFont hudFont;
-    /** Sound played when the player catches a coin. */
-    private Sound coinSound;
+    /** Time remaining to add a new bonus. */
+    private float timerNewBonus;
 
     /**
      * Creates the screen.
@@ -75,6 +88,9 @@ public class GameScreen extends BaseScreen {
         // Prepare the sounds
         coinSound = game.getSound("coin.mp3");
 
+        // Add the bonus (disabled and invisible)
+        bonus = addActor(new Bonus(game));
+
         // Add the player
         player = addActor(new Player(game));
 
@@ -94,6 +110,7 @@ public class GameScreen extends BaseScreen {
         coins = 0;
         time = 0;
         timerNewEnemy = game.getDifficulty().getNewEnemyInterval();
+        timerNewBonus = MathUtils.random(Constants.NEW_BONUS_MIN_TIME, Constants.NEW_BONUS_MAX_TIME);
     }
 
     @Override
@@ -113,14 +130,15 @@ public class GameScreen extends BaseScreen {
         super.act(delta);
 
         if(!gameEnding) {
-            // Update timers
-            time += delta;
-            timerNewEnemy -= delta;
-
             // Exit if the Escape key is presses
             if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
                 Gdx.app.exit();
             }
+
+            // Update timers
+            time += delta;
+            timerNewEnemy -= delta;
+            timerNewBonus -= delta;
 
             // Detect collision between player and coin
             if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
@@ -132,6 +150,11 @@ public class GameScreen extends BaseScreen {
                 if(coins % game.getDifficulty().getNewEnemyCoins() == 0) {
                     addEnemy();
                 }
+            }
+
+            // Detect collision between player and bonus
+            if(bonus.isEnabled() && player.overlaps(bonus)) {
+                giveBonus();
             }
 
             // Detect collisions between enemy balls
@@ -156,6 +179,11 @@ public class GameScreen extends BaseScreen {
             if(game.getGameMode() == GameMode.TIME && timerNewEnemy <= 0) {
                 timerNewEnemy += game.getDifficulty().getNewEnemyInterval();
                 addEnemy();
+            }
+
+            // Time to show the bonus?
+            if(timerNewBonus <= 0 && !bonus.isEnabled()) {
+                bonus.show();
             }
         }
     }
@@ -207,6 +235,18 @@ public class GameScreen extends BaseScreen {
      */
     private void addEnemy() {
         enemies.add(addActor(new Enemy(game)));
+    }
+
+    /**
+     * Gives the player a random bonus (or anti-bonus), and resets the bonus
+     * timer.
+     */
+    private void giveBonus() {
+        // Hide the bonus and reset the timer
+        bonus.hide();
+        timerNewBonus = MathUtils.random(Constants.NEW_BONUS_MIN_TIME, Constants.NEW_BONUS_MAX_TIME);
+
+        // TODO: Give the bonus
     }
 
     /**

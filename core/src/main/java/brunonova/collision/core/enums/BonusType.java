@@ -22,8 +22,10 @@ import com.badlogic.gdx.math.MathUtils;
  * Enumeration of the available bonus types, along with the time they last.
  */
 public enum BonusType {
-    /** Slows down the enemy balls to half the speed. */
-    SLOW_DOWN_ENEMIES(6);
+    /** Slows down the enemy balls by 50%. */
+    SLOW_DOWN_ENEMIES(6),
+    /** Speeds up the enemy balls by 50%. */
+    SPEED_UP_ENEMIES(3);
 
     private final float duration;
 

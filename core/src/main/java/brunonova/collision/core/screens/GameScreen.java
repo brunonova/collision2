@@ -71,6 +71,8 @@ public class GameScreen extends BaseScreen {
     private float timerNewBonus;
     /** Time until the {@link BonusType#SLOW_DOWN_ENEMIES} bonus is over. */
     private float timerSlowDownEnemiesBonus;
+    /** Time until the {@link BonusType#SPEED_UP_ENEMIES} bonus is over. */
+    private float timerSpeedUpEnemiesBonus;
 
     /**
      * Creates the screen.
@@ -115,6 +117,7 @@ public class GameScreen extends BaseScreen {
         timerNewEnemy = game.getDifficulty().getNewEnemyInterval();
         timerNewBonus = MathUtils.random(Constants.NEW_BONUS_MIN_TIME, Constants.NEW_BONUS_MAX_TIME);
         timerSlowDownEnemiesBonus = 0;
+        timerSpeedUpEnemiesBonus = 0;
     }
 
     @Override
@@ -144,6 +147,7 @@ public class GameScreen extends BaseScreen {
             timerNewEnemy -= delta;
             timerNewBonus -= delta;
             timerSlowDownEnemiesBonus -= delta;
+            timerSpeedUpEnemiesBonus -= delta;
 
             // Detect collision between player and coin
             if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
@@ -245,6 +249,15 @@ public class GameScreen extends BaseScreen {
     }
 
     /**
+     * Returns whether the {@link BonusType#SPEED_UP_ENEMIES} is currently
+     * active.
+     * @return {@code true} if the bonus is active.
+     */
+    public boolean isSpeedUpEnemiesBonusActive() {
+        return timerSpeedUpEnemiesBonus > 0;
+    }
+
+    /**
      * Returns the factor to multiply enemy balls speed by (based on the
      * currently active bonus).
      * @return The speed factor.
@@ -252,6 +265,8 @@ public class GameScreen extends BaseScreen {
     public float getEnemyBallsSpeedFactor() {
         if(isSlowDownEnemiesBonusActive()) {
             return 0.5f;
+        } else if(isSpeedUpEnemiesBonusActive()) {
+            return 1.5f;
         } else {
             return 1f;
         }
@@ -278,6 +293,11 @@ public class GameScreen extends BaseScreen {
         switch(type) {
             case SLOW_DOWN_ENEMIES:
                 timerSlowDownEnemiesBonus = type.getDuration();
+                timerSpeedUpEnemiesBonus = 0;
+                break;
+            case SPEED_UP_ENEMIES:
+                timerSlowDownEnemiesBonus = 0;
+                timerSpeedUpEnemiesBonus = type.getDuration();
                 break;
         }
     }

@@ -18,7 +18,6 @@ package brunonova.collision.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import java.io.IOException;
 import java.util.Properties;
 
 
@@ -55,9 +54,9 @@ public final class Constants {
             // Read version from version.properties file
             Properties prop = new Properties();
             try {
-                prop.load(Constants.class.getResourceAsStream(RES_PATH + "/version.properties"));
+                prop.load(Constants.class.getResourceAsStream("/" + RES_PATH + "/version.properties"));
                 version = prop.getProperty("version", "N/A");
-            } catch(IOException ex) {
+            } catch(Exception ex) {
                 Gdx.app.error(TAG, "error loading version.properties", ex);
                 version = "N/A";
             }

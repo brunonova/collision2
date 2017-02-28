@@ -21,6 +21,7 @@ import brunonova.collision.core.screens.GameScreen;
 import static brunonova.collision.core.Constants.RES_PATH;
 import brunonova.collision.core.enums.GameMode;
 import brunonova.collision.core.screens.BaseScreen;
+import brunonova.collision.core.screens.MenuScreen;
 import brunonova.collision.core.screens.PauseScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -62,6 +63,7 @@ public class Collision extends Game {
     private float volume = 1;  // TODO: parameterize this
 
     // Screens
+    private MenuScreen menuScreen;
     private GameScreen gameScreen;
     private PauseScreen pauseScreen;
 
@@ -81,9 +83,11 @@ public class Collision extends Game {
         shapeRenderer = new ShapeRenderer();
         loadAssets();
 
+        Gdx.graphics.setTitle(t("game.title"));
         setDifficulty(Difficulty.MEDIUM);
 
-        startGame();
+        menuScreen = new MenuScreen(this);
+        setScreen(menuScreen);
 	}
 
     @Override
@@ -133,8 +137,10 @@ public class Collision extends Game {
         FileHandleResolver resolver = new InternalFileHandleResolver();
         assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+        loadFont("font-title.ttf", "Ubuntu-B.ttf", 60);
         loadFont("font-hud.ttf", "Ubuntu-M.ttf", 22);
         loadFont("font-pause.ttf", "Ubuntu-B.ttf", 96, Color.BLACK, 5, 5);
+        loadFont("font-menu.ttf", "Ubuntu-M.ttf", 32);
 
         // Block to load all assets synchronously
         assetManager.finishLoading();

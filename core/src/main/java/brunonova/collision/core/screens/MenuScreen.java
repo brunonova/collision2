@@ -18,21 +18,18 @@ package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
 import brunonova.collision.core.Constants;
+import brunonova.collision.core.widgets.Menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
  * The main menu.
  */
 public class MenuScreen extends BaseScreen {
+    private Menu menu;
+
     /**
      * Creates the screen.
      * @param game The game.
@@ -46,41 +43,12 @@ public class MenuScreen extends BaseScreen {
         super.create();
 
         // Create the styles
-        Label.LabelStyle titleStyle = new Label.LabelStyle(game.getFont("font-title.ttf"), Color.BLACK);
         Label.LabelStyle versionStyle = new Label.LabelStyle(game.getFont("font-hud.ttf"), Color.BLACK);
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = game.getFont("font-menu.ttf");
-        buttonStyle.fontColor = Color.BLACK;
-        buttonStyle.overFontColor = Color.FOREST;
-        buttonStyle.downFontColor = Color.GREEN;
 
         // Create the menu
-        Table menu = new Table();
-        menu.setFillParent(true);
-        addActor(menu);
-
-        Label title = new Label(game.t("game.title"), titleStyle);
-        menu.add(title).spaceBottom(100);
-        menu.row();
-
-        TextButton playButton = new TextButton(game.t("menu.play"), buttonStyle);
-        playButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                onPlay();
-            }
-        });
-        menu.add(playButton);
-        menu.row();
-
-        TextButton quitButton = new TextButton(game.t("menu.quit"), buttonStyle);
-        quitButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                onQuit();
-            }
-        });
-        menu.add(quitButton);
+        menu = addActor(new Menu(game, game.t("game.title")));
+        menu.addButton(game.t("menu.play"), this::play);
+        menu.addButton(game.t("menu.quit"), this::quit);
 
         // Add the version of the game to the bottom left corner
         Label version = new Label(game.t("menu.version", Constants.getVersion()), versionStyle);
@@ -92,16 +60,23 @@ public class MenuScreen extends BaseScreen {
     public void act(float delta) {
         super.act(delta);
 
+        // Quit game when the Escape key is pressed
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            onQuit();
+            quit();
         }
     }
 
-    private void onPlay() {
+    /**
+     * Starts a new game.
+     */
+    private void play() {
         game.startGame();
     }
 
-    private void onQuit() {
+    /**
+     * Exits the game.
+     */
+    private void quit() {
         Gdx.app.exit();
     }
 }

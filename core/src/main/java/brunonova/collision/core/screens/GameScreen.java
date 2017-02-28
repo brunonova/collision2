@@ -75,6 +75,8 @@ public class GameScreen extends BaseScreen {
     private float timerSpeedUpEnemiesBonus;
     /** Time until the {@link BonusType#FREEZE_ENEMIES} bonus is over. */
     private float timerFreezeEnemiesBonus;
+    /** Time until the {@link BonusType#FREEZE_PLAYER} bonus is over. */
+    private float timerFreezePlayerBonus;
 
     /**
      * Creates the screen.
@@ -121,6 +123,7 @@ public class GameScreen extends BaseScreen {
         timerSlowDownEnemiesBonus = 0;
         timerSpeedUpEnemiesBonus = 0;
         timerFreezeEnemiesBonus = 0;
+        timerFreezePlayerBonus = 0;
     }
 
     @Override
@@ -152,6 +155,7 @@ public class GameScreen extends BaseScreen {
             timerSlowDownEnemiesBonus -= delta;
             timerSpeedUpEnemiesBonus -= delta;
             timerFreezeEnemiesBonus -= delta;
+            timerFreezePlayerBonus -= delta;
 
             // Detect collision between player and coin
             if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
@@ -197,6 +201,11 @@ public class GameScreen extends BaseScreen {
             // Time to show the bonus?
             if(timerNewBonus <= 0 && !bonus.isEnabled()) {
                 bonus.show();
+            }
+
+            // Time to unfreeze the player?
+            if(timerFreezePlayerBonus <= 0 && player.isFrozen() && player.isEnabled()) {
+                player.unfreeze();
             }
         }
     }
@@ -320,6 +329,10 @@ public class GameScreen extends BaseScreen {
                 timerSlowDownEnemiesBonus = 0;
                 timerSpeedUpEnemiesBonus = 0;
                 timerFreezeEnemiesBonus = type.getDuration();
+                break;
+            case FREEZE_PLAYER:
+                timerFreezePlayerBonus = type.getDuration();
+                player.freeze();
                 break;
         }
     }

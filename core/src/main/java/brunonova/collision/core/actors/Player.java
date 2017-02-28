@@ -19,6 +19,7 @@ package brunonova.collision.core.actors;
 import brunonova.collision.core.Collision;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 
 /**
@@ -28,7 +29,12 @@ public class Player extends Ball {
     /** The speed of the player ball when using the keyboard (pixels/second). */
     public static final float KEYBOARD_SPEED = 400;
 
+    /** Sprite used when the player is in the normal state. */
+    private final Sprite normalSprite;
+    /** Sprite used when the player is frozen. */
+    private final Sprite frozenSprite;
     private boolean enabled = true;
+    private boolean frozen = false;
 
     /**
      * Creates the player.
@@ -37,13 +43,18 @@ public class Player extends Ball {
     public Player(Collision game) {
         super(game, "player.png");
         centerOnScreen();
+        normalSprite = sprite;
+
+        // Set the "frozen" sprite
+        frozenSprite = new Sprite(game.getImage("player_frozen.png"));
+        frozenSprite.setSize(sprite.getWidth(), sprite.getHeight());
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
 
-        if(enabled) {
+        if(isEnabled() && !isFrozen()) {
             // Determine how many pixels to move the player by this frame
             float dx = 0, dy = 0;
 
@@ -73,6 +84,36 @@ public class Player extends Ball {
      */
     public boolean overlaps(Coin coin) {
         return boundingCircle.overlaps(coin.boundingCircle);
+    }
+
+    /**
+     * Freezes the player in place.
+     */
+    public void freeze() {
+        if(!isFrozen()) {
+            frozen = true;
+            sprite = frozenSprite;
+            positionChanged();  // ensure the sprite is drawn at the right position
+        }
+    }
+
+    /**
+     * Unfreezes the player.
+     */
+    public void unfreeze() {
+        if(isFrozen()) {
+            frozen = false;
+            sprite = normalSprite;
+            positionChanged();  // ensure the sprite is drawn at the right position
+        }
+    }
+
+    /**
+     * Returns whether the player is currently frozen.
+     * @return {@code true} if the player is frozen.
+     */
+    public boolean isFrozen() {
+        return frozen;
     }
 
     /**

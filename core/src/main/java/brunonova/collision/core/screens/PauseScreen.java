@@ -62,8 +62,8 @@ public class PauseScreen extends BaseScreen {
         addActor(label);
 
         // Add a blinking animation to the label
-        label.addAction(Actions.repeat(
-                RepeatAction.FOREVER, Actions.sequence(
+        label.addAction(Actions.forever(
+                Actions.sequence(
                         Actions.fadeOut(0.3f),
                         Actions.fadeIn(0.3f)
                 )

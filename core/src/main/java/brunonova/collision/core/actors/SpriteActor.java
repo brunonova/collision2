@@ -47,7 +47,9 @@ public abstract class SpriteActor extends BaseActor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        sprite.draw(batch, parentAlpha * getColor().a);
+        if(isVisible()) {
+            sprite.draw(batch, parentAlpha * getColor().a);
+        }
     }
 
     /**

@@ -79,11 +79,13 @@ public abstract class AnimatedActor extends BaseActor {
         super.draw(batch, parentAlpha);
 
         // Draw the current frame of the animation
-        Color oldColor = batch.getColor();
-        Color newColor = getColor().cpy();
-        newColor.a *= parentAlpha;
-        batch.setColor(newColor);
-        batch.draw(animation.getKeyFrame(time, true), getX(), getY());
-        batch.setColor(oldColor);
+        if(isVisible()) {
+            Color oldColor = batch.getColor();
+            Color newColor = getColor().cpy();
+            newColor.a *= parentAlpha;
+            batch.setColor(newColor);
+            batch.draw(animation.getKeyFrame(time, true), getX(), getY());
+            batch.setColor(oldColor);
+        }
     }
 }

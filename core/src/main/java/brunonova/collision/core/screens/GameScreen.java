@@ -77,6 +77,8 @@ public class GameScreen extends BaseScreen {
     private float timerFreezeEnemiesBonus;
     /** Time until the {@link BonusType#FREEZE_PLAYER} bonus is over. */
     private float timerFreezePlayerBonus;
+    /** Time until the {@link BonusType#INVULNERABILITY} bonus is over. */
+    private float timerInvulnerabilityBonus;
 
     /**
      * Creates the screen.
@@ -124,6 +126,7 @@ public class GameScreen extends BaseScreen {
         timerSpeedUpEnemiesBonus = 0;
         timerFreezeEnemiesBonus = 0;
         timerFreezePlayerBonus = 0;
+        timerInvulnerabilityBonus = 0;
     }
 
     @Override
@@ -156,6 +159,7 @@ public class GameScreen extends BaseScreen {
             timerSpeedUpEnemiesBonus -= delta;
             timerFreezeEnemiesBonus -= delta;
             timerFreezePlayerBonus -= delta;
+            timerInvulnerabilityBonus -= delta;
 
             // Detect collision between player and coin
             if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
@@ -186,9 +190,11 @@ public class GameScreen extends BaseScreen {
             }
 
             // Detect collision between player and enemy balls
-            for(Enemy enemy: enemies) {
-                if(enemy.isEnabled() && player.overlaps(enemy)) {
-                    gameOver();
+            if(player.isEnabled() && !player.isInvulnerable()) {
+                for(Enemy enemy: enemies) {
+                    if(enemy.isEnabled() && player.overlaps(enemy)) {
+                        gameOver();
+                    }
                 }
             }
 
@@ -206,6 +212,11 @@ public class GameScreen extends BaseScreen {
             // Time to unfreeze the player?
             if(timerFreezePlayerBonus <= 0 && player.isFrozen() && player.isEnabled()) {
                 player.unfreeze();
+            }
+
+            // Time to make the player vulnerable again?
+            if(timerInvulnerabilityBonus <= 0 && player.isInvulnerable() && player.isEnabled()) {
+                player.makeVulnerable();
             }
         }
     }
@@ -334,6 +345,10 @@ public class GameScreen extends BaseScreen {
                 timerFreezePlayerBonus = type.getDuration();
                 player.freeze();
                 break;
+            case INVULNERABILITY:
+                timerInvulnerabilityBonus = type.getDuration();
+                player.makeInvulnerable();
+            break;
         }
     }
 

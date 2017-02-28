@@ -19,7 +19,9 @@ package brunonova.collision.core.actors;
 import brunonova.collision.core.Collision;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 
 /**
@@ -33,8 +35,15 @@ public class Player extends Ball {
     private final Sprite normalSprite;
     /** Sprite used when the player is frozen. */
     private final Sprite frozenSprite;
+    /**
+     * Ball drawn on top of the player when the player is invulnerable (an
+     * actor, so actions are available).
+     */
+    private final InvulnerableOverlay invulnerableOverlay;
     private boolean enabled = true;
     private boolean frozen = false;
+    private boolean invulnerable = false;
+    private boolean invulnerabilityEnding = false;
 
     /**
      * Creates the player.
@@ -48,11 +57,17 @@ public class Player extends Ball {
         // Set the "frozen" sprite
         frozenSprite = new Sprite(game.getImage("player_frozen.png"));
         frozenSprite.setSize(sprite.getWidth(), sprite.getHeight());
+
+        // Create the "invulnerable" overlay
+        invulnerableOverlay = new InvulnerableOverlay();
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
+
+        // Run any actions in the "invulnerable" overlay
+        if(invulnerableOverlay != null) invulnerableOverlay.act(delta);
 
         if(isEnabled() && !isFrozen()) {
             // Determine how many pixels to move the player by this frame
@@ -75,6 +90,22 @@ public class Player extends Ball {
                 keepInsideWindow();  // ensure the player is inside of the window
             }
         }
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+
+        // Draws the "invulnerable" overlay, if active
+        if(invulnerableOverlay != null) invulnerableOverlay.draw(batch, parentAlpha);
+    }
+
+    @Override
+    protected void positionChanged() {
+        super.positionChanged();
+
+        // Updates the position of the "invulnerable" overlay
+        if(invulnerableOverlay != null) invulnerableOverlay.setPosition(getX(), getY());
     }
 
     /**
@@ -109,11 +140,50 @@ public class Player extends Ball {
     }
 
     /**
+     * Makes the player invulnerable.
+     */
+    public void makeInvulnerable() {
+        invulnerable = true;
+        invulnerabilityEnding = false;
+        invulnerableOverlay.clearActions();
+        invulnerableOverlay.setVisible(true);
+        invulnerableOverlay.getColor().a = 1;
+    }
+
+    /**
+     * Makes the player vulnerable again, after a short animation.
+     */
+    public void makeVulnerable() {
+        if(isInvulnerable() && !invulnerabilityEnding) {
+            invulnerabilityEnding = true;
+            invulnerableOverlay.clearActions();
+            invulnerableOverlay.addAction(
+                    Actions.sequence(
+                            Actions.fadeOut(0.2f),
+                            Actions.repeat(4, Actions.sequence(
+                                    Actions.fadeIn(0.2f),
+                                    Actions.fadeOut(0.2f))),
+                            Actions.run(() -> {
+                                invulnerable = false;
+                                invulnerableOverlay.setVisible(false);
+                            })));
+        }
+    }
+
+    /**
      * Returns whether the player is currently frozen.
      * @return {@code true} if the player is frozen.
      */
     public boolean isFrozen() {
         return frozen;
+    }
+
+    /**
+     * Returns whether the player is currently invulnerable.
+     * @return {@code true} if the player is invulnerable.
+     */
+    public boolean isInvulnerable() {
+        return invulnerable;
     }
 
     /**
@@ -131,5 +201,24 @@ public class Player extends Ball {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+
+    /**
+     * Definition of the "invulnerable" overlay drawn on top of the player ball
+     * when the player is invulnerable.
+     * This is an actor so that actions are available.
+     */
+    private class InvulnerableOverlay extends Ball {
+        /**
+         * Creates the overlay.
+         */
+        @SuppressWarnings("OverridableMethodCallInConstructor")
+        public InvulnerableOverlay() {
+            super(Player.this.game, "player_invulnerable.png");
+            setWidth(Player.this.getWidth());
+            setHeight(Player.this.getHeight());
+            setVisible(false);
+        }
     }
 }

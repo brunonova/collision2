@@ -20,18 +20,20 @@ package brunonova.collision.core.enums;
  * Enumeration of the difficulty levels and their properties.
  */
 public enum Difficulty {
-    EASY(200, 15, 10),
-    MEDIUM(300, 15, 10),
-    HARD(400, 15, 10);
+    EASY(200, 15, 10, 200),
+    MEDIUM(300, 15, 10, 200),
+    HARD(400, 15, 10, 200);
 
     private final float enemySpeed;
     private final float newEnemyInterval;
     private final float newEnemyCoins;
+    private final float missileSpeed;
 
-    private Difficulty(float enemySpeed, float newEnemyInterval, float newEnemyCoins) {
+    private Difficulty(float enemySpeed, float newEnemyInterval, float newEnemyCoins, float missileSpeed) {
         this.enemySpeed = enemySpeed;
         this.newEnemyInterval = newEnemyInterval;
         this.newEnemyCoins = newEnemyCoins;
+        this.missileSpeed = missileSpeed;
     }
 
     /**
@@ -58,5 +60,13 @@ public enum Difficulty {
      */
     public float getNewEnemyCoins() {
         return newEnemyCoins;
+    }
+
+    /**
+     * Returns the speed of missiles for this difficulty level.
+     * @return The speed of missiles.
+     */
+    public float getMissileSpeed() {
+        return missileSpeed;
     }
 }

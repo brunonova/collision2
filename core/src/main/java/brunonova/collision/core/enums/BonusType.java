@@ -31,7 +31,9 @@ public enum BonusType {
     /** Freezes the player ball in place. */
     FREEZE_PLAYER(0.6f),
     /** Makes the player invulnerable */
-    INVULNERABILITY(5);
+    INVULNERABILITY(5),
+    /** A homing missile that tries to hit the player. */
+    MISSILE(5);
 
     private final float duration;
 

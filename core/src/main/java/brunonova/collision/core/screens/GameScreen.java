@@ -21,6 +21,7 @@ import brunonova.collision.core.Constants;
 import brunonova.collision.core.actors.Bonus;
 import brunonova.collision.core.actors.Coin;
 import brunonova.collision.core.actors.Enemy;
+import brunonova.collision.core.actors.Missile;
 import brunonova.collision.core.actors.Player;
 import brunonova.collision.core.enums.BonusType;
 import brunonova.collision.core.enums.GameMode;
@@ -49,6 +50,8 @@ public class GameScreen extends BaseScreen {
     private Coin coin;
     /** The bonus (only 1 bonus is created, and then it's reused). */
     private Bonus bonus;
+    /** The missile (only 1 missile is created, and then it's reused). */
+    private Missile missile;
 
     // Resources
     /** Font used on the HUD. */
@@ -79,6 +82,8 @@ public class GameScreen extends BaseScreen {
     private float timerFreezePlayerBonus;
     /** Time until the {@link BonusType#INVULNERABILITY} bonus is over. */
     private float timerInvulnerabilityBonus;
+    /** Time until the {@link BonusType#MISSILE} bonus is over. */
+    private float timerMissileBonus;
 
     /**
      * Creates the screen.
@@ -111,6 +116,9 @@ public class GameScreen extends BaseScreen {
             addEnemy();
         }
 
+        // Add the missile (disabled and invisible)
+        missile = addActor(new Missile(game));
+
         // Create the coin, if in "Coins" mode
         if(game.getGameMode() == GameMode.COINS) {
             coin = addActor(new Coin(game));
@@ -127,6 +135,7 @@ public class GameScreen extends BaseScreen {
         timerFreezeEnemiesBonus = 0;
         timerFreezePlayerBonus = 0;
         timerInvulnerabilityBonus = 0;
+        timerMissileBonus = 0;
     }
 
     @Override
@@ -160,6 +169,7 @@ public class GameScreen extends BaseScreen {
             timerFreezeEnemiesBonus -= delta;
             timerFreezePlayerBonus -= delta;
             timerInvulnerabilityBonus -= delta;
+            timerMissileBonus -= delta;
 
             // Detect collision between player and coin
             if(game.getGameMode() == GameMode.COINS && coin.isEnabled() && player.overlaps(coin)) {
@@ -198,6 +208,12 @@ public class GameScreen extends BaseScreen {
                 }
             }
 
+            if(player.isEnabled() && !player.isInvulnerable()) {
+                if(missile.isEnabled() && player.overlaps(missile)) {
+                    gameOver();
+                }
+            }
+
             // Time to add another enemy ball?
             if(game.getGameMode() == GameMode.TIME && timerNewEnemy <= 0) {
                 timerNewEnemy += game.getDifficulty().getNewEnemyInterval();
@@ -217,6 +233,11 @@ public class GameScreen extends BaseScreen {
             // Time to make the player vulnerable again?
             if(timerInvulnerabilityBonus <= 0 && player.isInvulnerable() && player.isEnabled()) {
                 player.makeVulnerable();
+            }
+
+            // Time to hide the missile?
+            if(timerMissileBonus <= 0 && missile.isEnabled()) {
+                missile.hide();
             }
         }
     }
@@ -348,7 +369,11 @@ public class GameScreen extends BaseScreen {
             case INVULNERABILITY:
                 timerInvulnerabilityBonus = type.getDuration();
                 player.makeInvulnerable();
-            break;
+                break;
+            case MISSILE:
+                timerMissileBonus = type.getDuration();
+                missile.show();
+                break;
         }
     }
 

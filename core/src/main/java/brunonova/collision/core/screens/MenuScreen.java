@@ -48,6 +48,8 @@ public class MenuScreen extends BaseScreen {
         // Create the menu
         menu = addActor(new Menu(game, game.t("game.title")));
         menu.addButton(game.t("menu.play"), this::play);
+        menu.addButton(game.t("menu.options"), this::options);
+        menu.addButton(game.t("menu.highscores"), this::highscores);
         menu.addButton(game.t("menu.quit"), this::quit);
 
         // Add the version of the game to the bottom left corner
@@ -71,6 +73,20 @@ public class MenuScreen extends BaseScreen {
      */
     private void play() {
         game.startGame();
+    }
+
+    /**
+     * Opens the options menu.
+     */
+    private void options() {
+        game.showOptionsMenu();
+    }
+
+    /**
+     * Opens the high scores screen.
+     */
+    private void highscores() {
+        // TODO
     }
 
     /**

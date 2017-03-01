@@ -22,6 +22,7 @@ import static brunonova.collision.core.Constants.RES_PATH;
 import brunonova.collision.core.enums.GameMode;
 import brunonova.collision.core.screens.BaseScreen;
 import brunonova.collision.core.screens.MenuScreen;
+import brunonova.collision.core.screens.OptionsScreen;
 import brunonova.collision.core.screens.PauseScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -64,6 +65,7 @@ public class Collision extends Game {
 
     // Screens
     private MenuScreen menuScreen;
+    private OptionsScreen optionsScreen;
     private GameScreen gameScreen;
     private PauseScreen pauseScreen;
 
@@ -236,8 +238,15 @@ public class Collision extends Game {
      * Returns to the main menu.
      */
     public void returnToMenu() {
-        //menuScreen.dispose();
         setScreen(menuScreen);
+    }
+
+    /**
+     * Switches to the Options screen.
+     */
+    public void showOptionsMenu() {
+        if(optionsScreen == null) optionsScreen = new OptionsScreen(this);
+        setScreen(optionsScreen);
     }
 
     /**

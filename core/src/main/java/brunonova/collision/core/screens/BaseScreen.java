@@ -70,7 +70,6 @@ public abstract class BaseScreen implements Screen {
      */
     public void create() {
         this.stage = new Stage(new FitViewport(game.getWidth(), game.getHeight()), batch);
-        Gdx.input.setInputProcessor(stage);
     }
 
     /**
@@ -85,6 +84,10 @@ public abstract class BaseScreen implements Screen {
             create();
             created = true;
         }
+
+        // Set this screen as the input processor, or else the previous screen
+        // will still be the input processor
+        Gdx.input.setInputProcessor(stage);
     }
 
     /**
@@ -94,7 +97,7 @@ public abstract class BaseScreen implements Screen {
      */
     @Override
     public void hide() {
-
+        Gdx.input.setInputProcessor(null);
     }
 
     /**

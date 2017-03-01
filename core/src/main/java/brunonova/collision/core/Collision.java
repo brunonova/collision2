@@ -233,6 +233,14 @@ public class Collision extends Game {
     }
 
     /**
+     * Returns to the main menu.
+     */
+    public void returnToMenu() {
+        //menuScreen.dispose();
+        setScreen(menuScreen);
+    }
+
+    /**
      * Pauses the game by switching to the "PAUSE" screen.
      * <p>This method should be called at the end of the {@code render()}
      * method, or else the screenshot taken to be used as the background of the

@@ -157,7 +157,8 @@ public class GameScreen extends BaseScreen {
         if(!gameEnding) {
             // Exit if the Escape key is presses
             if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-                Gdx.app.exit();
+                dispose();
+                game.returnToMenu();
             }
 
             // Update timers
@@ -396,7 +397,8 @@ public class GameScreen extends BaseScreen {
                 Actions.fadeOut(2),
                 Actions.run(() -> {
                     // Exit the game
-                    Gdx.app.exit();
+                    dispose();
+                    game.returnToMenu();
                 })));
     }
 

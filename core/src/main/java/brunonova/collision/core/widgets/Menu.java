@@ -19,12 +19,14 @@ package brunonova.collision.core.widgets;
 import brunonova.collision.core.Collision;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A widget that displays a menu with a title.
@@ -34,8 +36,8 @@ public class Menu extends Table {
     private final Collision game;
 
     // Styles
-    private Label.LabelStyle titleStyle;
-    TextButton.TextButtonStyle buttonStyle;
+    private Label.LabelStyle titleStyle, labelStyle;
+    private TextButton.TextButtonStyle buttonStyle, choiceButtonStyle;
 
     // Widgets
     private final Label titleLabel;
@@ -63,8 +65,9 @@ public class Menu extends Table {
      * Adds a button to the menu.
      * @param text Label of the button.
      * @param action Action to run when the button is clicked.
+     * @return The added button.
      */
-    public void addButton(String text, Runnable action) {
+    public TextButton addButton(String text, Runnable action) {
         row();  // add a row
 
         // Create the button
@@ -79,6 +82,63 @@ public class Menu extends Table {
                 action.run();
             }
         });
+
+        return button;
+    }
+
+    /**
+     * Adds a multiple choice option.
+     * @param <T> Type of the value of the option.
+     * @param labelText Text of the label.
+     * @param defaultValue Default value of the option.
+     * @param choices Definition of the available options.
+     * @return The added buttons.
+     */
+    public <T> List<TextButton> addButtonChoices(String labelText, T defaultValue, ButtonChoice<T>... choices) {
+        row();  // add a row
+
+        // Create a table for this row
+        Table row = new Table();
+        List<TextButton> newButtons = new ArrayList<>();
+        add(row);
+
+        // Create a button group to ensure that only 1 choice is selected
+        ButtonGroup<TextButton> group = new ButtonGroup<>();
+        group.setMinCheckCount(1);
+        group.setMaxCheckCount(1);
+        group.setUncheckLast(true);
+
+        // Create the label
+        Label label = new Label(labelText, labelStyle);
+        row.add(label);
+
+        // Create a "radio" button for each choice
+        for(ButtonChoice choice: choices) {
+            // Create the button
+            TextButton button = new TextButton(choice.getText(), choiceButtonStyle);
+            group.add(button);
+            buttons.add(button);
+            newButtons.add(button);
+            row.add(button).padLeft(20);
+
+            // Select this button if it has the default value
+            if(Objects.equals(defaultValue, choice.getValue())) {
+                button.setChecked(true);
+            }
+
+            // Setup the listener
+            button.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                    TextButton button = (TextButton) actor;  // it's always a TextButton
+                    if(button.isChecked()) {
+                        choice.getAction().run(choice.getValue());
+                    }
+                }
+            });
+        }
+
+        return newButtons;
     }
 
     /**
@@ -88,12 +148,23 @@ public class Menu extends Table {
         // Style of the title
         titleStyle = new Label.LabelStyle(game.getFont("font-title.ttf"), Color.BLACK);
 
+        // Style of the labels
+        labelStyle = new Label.LabelStyle(game.getFont("font-menu.ttf"), Color.BLACK);
+
         // Style of the buttons
         buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.font = game.getFont("font-menu.ttf");
         buttonStyle.fontColor = Color.BLACK;
         buttonStyle.overFontColor = Color.FOREST;
         buttonStyle.downFontColor = Color.GREEN;
+
+        // Style of the radio buttons
+        choiceButtonStyle = new TextButton.TextButtonStyle();
+        choiceButtonStyle.font = game.getFont("font-menu.ttf");
+        choiceButtonStyle.fontColor = Color.BLACK;
+        choiceButtonStyle.overFontColor = Color.FOREST;
+        choiceButtonStyle.downFontColor = Color.GREEN;
+        choiceButtonStyle.checkedFontColor = Color.RED;
     }
 
     /**

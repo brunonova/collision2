@@ -17,6 +17,7 @@
 package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
+import brunonova.collision.core.widgets.ButtonChoice;
 import brunonova.collision.core.widgets.Menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -27,6 +28,10 @@ import com.badlogic.gdx.Input;
 public class OptionsScreen extends BaseScreen {
     private Menu menu;
 
+    /**
+     * Creates the screen.
+     * @param game The game.
+     */
     public OptionsScreen(Collision game) {
         super(game);
     }
@@ -37,6 +42,9 @@ public class OptionsScreen extends BaseScreen {
 
         // Create the menu
         menu = addActor(new Menu(game, game.t("options.title")));
+        menu.addButtonChoices(game.t("options.sound"), game.getVolume(),
+                new ButtonChoice<>(game.t("options.off"), 0f, this::changeVolume),
+                new ButtonChoice<>(game.t("options.on"), 1f, this::changeVolume));
         menu.addButton(game.t("options.back"), this::back);
     }
 
@@ -48,6 +56,14 @@ public class OptionsScreen extends BaseScreen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             back();
         }
+    }
+
+    /**
+     * Changes the sound volume.
+     * @param volume New volume.
+     */
+    private void changeVolume(float volume) {
+        game.setVolume(volume);
     }
 
     /**

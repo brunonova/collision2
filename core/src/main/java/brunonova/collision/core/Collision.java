@@ -51,6 +51,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * Main class of the game.
  */
 public class Collision extends Game {
+    private static final String TAG = Game.class.getName();
+
 	private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private AssetManager assetManager;
@@ -61,9 +63,10 @@ public class Collision extends Game {
     // Options
     private Preferences preferences;
     private Difficulty difficulty;
-    private GameMode gameMode = GameMode.COINS;  // TODO: parameterize this
-    private boolean showFPS = true;  // TODO: parameterize this
+    private GameMode gameMode;
+    private boolean showFPS;
     private float volume;
+    private boolean fullScreen;
 
     // Screens
     private MenuScreen menuScreen;
@@ -89,17 +92,21 @@ public class Collision extends Game {
 
         Gdx.graphics.setTitle(t("game.title"));
         loadPreferences();
-        setDifficulty(Difficulty.MEDIUM);
 
         menuScreen = new MenuScreen(this);
         setScreen(menuScreen);
+
+        // Switch to full screen mode if it's the user preference
+        if(isFullScreen()) {
+            switchToFullScreen();
+        }
 	}
 
     @Override
     public void render() {
         super.render();
 
-        // Enable or disable full-screen mode when pressing F11
+        // Enable or disable full screen mode when pressing F11
         if(Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
             if(Gdx.graphics.isFullscreen()) {
                 Gdx.graphics.setWindowedMode(getWidth(), getHeight());
@@ -233,7 +240,23 @@ public class Collision extends Game {
      * Loads the user preferences.
      */
     public void loadPreferences() {
+        try {
+            gameMode = GameMode.valueOf(getPreferences().getString("gameMode", "TIME"));
+        } catch(IllegalArgumentException ex) {
+            Gdx.app.error(TAG, "error loading gameMode preference", ex);
+            gameMode = GameMode.TIME;
+        }
+
+        try {
+            difficulty = Difficulty.valueOf(getPreferences().getString("difficulty", "EASY"));
+        } catch(IllegalArgumentException ex) {
+            Gdx.app.error(TAG, "error loading difficulty preference", ex);
+            difficulty = Difficulty.EASY;
+        }
+
         volume = getPreferences().getFloat("volume", 0f);
+        showFPS = getPreferences().getBoolean("showFPS", false);
+        fullScreen = getPreferences().getBoolean("fullScreen", false);
     }
 
     /**
@@ -362,6 +385,10 @@ public class Collision extends Game {
      */
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
+
+        // Persist the preference
+        getPreferences().putString("difficulty", difficulty.toString());
+        getPreferences().flush();
     }
 
     /**
@@ -378,6 +405,10 @@ public class Collision extends Game {
      */
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
+
+        // Persist the preference
+        getPreferences().putString("gameMode", gameMode.toString());
+        getPreferences().flush();
     }
 
     /**
@@ -394,6 +425,10 @@ public class Collision extends Game {
      */
     public void setShowFPS(boolean showFPS) {
         this.showFPS = showFPS;
+
+        // Persist the preference
+        getPreferences().putBoolean("showFPS", showFPS);
+        getPreferences().flush();
     }
 
     /**
@@ -417,10 +452,51 @@ public class Collision extends Game {
     }
 
     /**
+     * Returns whether the game is in full screen mode.
+     * @return {@code true} if the game is full screen.
+     */
+    public boolean isFullScreen() {
+        return fullScreen;
+    }
+
+    /**
+     * Enables or disables full screen mode.
+     * @param fullScreen {@code true} to enable full screen mode.
+     */
+    public void setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
+
+        // Persist the preference
+        getPreferences().putBoolean("fullScreen", fullScreen);
+        getPreferences().flush();
+
+        // Make the switch to full screen or windowed mode, accordingly
+        if(fullScreen) {
+            switchToFullScreen();
+        } else {
+            switchToWindowedMode();
+        }
+    }
+
+    /**
      * Returns the actual game screen.
      * @return The game screen.
      */
     public GameScreen getGameScreen() {
         return gameScreen;
+    }
+
+    /**
+     * Switches the game to full screen mode (without changing preferences).
+     */
+    private void switchToFullScreen() {
+        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+    }
+
+    /**
+     * Switches the game to windowed mode (without changing preferences).
+     */
+    private void switchToWindowedMode() {
+        Gdx.graphics.setWindowedMode(getWidth(), getHeight());
     }
 }

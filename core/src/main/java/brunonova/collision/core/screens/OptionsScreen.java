@@ -17,6 +17,8 @@
 package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
+import brunonova.collision.core.enums.Difficulty;
+import brunonova.collision.core.enums.GameMode;
 import brunonova.collision.core.widgets.ButtonChoice;
 import brunonova.collision.core.widgets.Menu;
 import com.badlogic.gdx.Gdx;
@@ -27,6 +29,7 @@ import com.badlogic.gdx.Input;
  */
 public class OptionsScreen extends BaseScreen {
     private Menu menu;
+    // TODO: update Full Screen option when F11 is pressed
 
     /**
      * Creates the screen.
@@ -42,9 +45,22 @@ public class OptionsScreen extends BaseScreen {
 
         // Create the menu
         menu = addActor(new Menu(game, game.t("options.title")));
+        menu.addButtonChoices(game.t("options.mode"), game.getGameMode(),
+                new ButtonChoice<>(game.t("options.mode.time"), GameMode.TIME, this::changeMode),
+                new ButtonChoice<>(game.t("options.mode.coins"), GameMode.COINS, this::changeMode));
+        menu.addButtonChoices(game.t("options.difficulty"), game.getDifficulty(),
+                new ButtonChoice<>(game.t("options.difficulty.easy"), Difficulty.EASY, this::changeDifficulty),
+                new ButtonChoice<>(game.t("options.difficulty.medium"), Difficulty.MEDIUM, this::changeDifficulty),
+                new ButtonChoice<>(game.t("options.difficulty.hard"), Difficulty.HARD, this::changeDifficulty));
+        menu.addButtonChoices(game.t("options.fullScreen"), game.isFullScreen(),
+                new ButtonChoice<>(game.t("options.off"), false, this::changeFullScreen),
+                new ButtonChoice<>(game.t("options.on"), true, this::changeFullScreen));
         menu.addButtonChoices(game.t("options.sound"), game.getVolume(),
                 new ButtonChoice<>(game.t("options.off"), 0f, this::changeVolume),
                 new ButtonChoice<>(game.t("options.on"), 1f, this::changeVolume));
+        menu.addButtonChoices(game.t("options.showFPS"), game.isShowFPS(),
+                new ButtonChoice<>(game.t("options.off"), false, this::changeShowFPS),
+                new ButtonChoice<>(game.t("options.on"), true, this::changeShowFPS));
         menu.addButton(game.t("options.back"), this::back);
     }
 
@@ -59,11 +75,43 @@ public class OptionsScreen extends BaseScreen {
     }
 
     /**
+     * Changes the game mode.
+     * @param mode New mode.
+     */
+    private void changeMode(GameMode mode) {
+        game.setGameMode(mode);
+    }
+
+    /**
+     * Changes the game difficulty.
+     * @param difficulty The new difficulty level.
+     */
+    private void changeDifficulty(Difficulty difficulty) {
+        game.setDifficulty(difficulty);
+    }
+
+    /**
+     * Enables or disables full screen mode.
+     * @param fullScreen {@code true} to enable it.
+     */
+    private void changeFullScreen(Boolean fullScreen) {
+        game.setFullScreen(fullScreen);
+    }
+
+    /**
      * Changes the sound volume.
      * @param volume New volume.
      */
     private void changeVolume(float volume) {
         game.setVolume(volume);
+    }
+
+    /**
+     * Enables or disables the FPS indicator during the game.
+     * @param value {@code true} to enable it.
+     */
+    private void changeShowFPS(Boolean value) {
+        game.setShowFPS(value);
     }
 
     /**

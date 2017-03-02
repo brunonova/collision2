@@ -58,6 +58,7 @@ public class DesktopLauncher {
         }
 
         // Configure and start the game
+        // TODO: change preferences file location
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Collision";
         config.vSyncEnabled = true;

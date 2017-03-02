@@ -27,6 +27,7 @@ import brunonova.collision.core.screens.PauseScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -58,10 +59,11 @@ public class Collision extends Game {
     private final int height;
 
     // Options
+    private Preferences preferences;
     private Difficulty difficulty;
     private GameMode gameMode = GameMode.COINS;  // TODO: parameterize this
     private boolean showFPS = true;  // TODO: parameterize this
-    private float volume = 1;  // TODO: parameterize this
+    private float volume;
 
     // Screens
     private MenuScreen menuScreen;
@@ -86,6 +88,7 @@ public class Collision extends Game {
         loadAssets();
 
         Gdx.graphics.setTitle(t("game.title"));
+        loadPreferences();
         setDifficulty(Difficulty.MEDIUM);
 
         menuScreen = new MenuScreen(this);
@@ -224,6 +227,24 @@ public class Collision extends Game {
         } else {
             return i18n.format(key, args);
         }
+    }
+
+    /**
+     * Loads the user preferences.
+     */
+    public void loadPreferences() {
+        volume = getPreferences().getFloat("volume", 0f);
+    }
+
+    /**
+     * Returns the user preferences.
+     * @return The user preferences.
+     */
+    public Preferences getPreferences() {
+        if(preferences == null) {
+            preferences = Gdx.app.getPreferences(getClass().getName() + ".xml");
+        }
+        return preferences;
     }
 
     /**
@@ -389,6 +410,10 @@ public class Collision extends Game {
      */
     public void setVolume(float volume) {
         this.volume = volume;
+
+        // Persist the preference
+        getPreferences().putFloat("volume", volume);
+        getPreferences().flush();
     }
 
     /**

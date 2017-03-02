@@ -50,12 +50,13 @@ public class Menu extends Table {
     public Menu(Collision game, String title) {
         this.game = game;
         setFillParent(true);
+        top();
         buttons = new ArrayList<>();
         setupStyles();
 
         // Add the title label
         titleLabel = new Label(title, titleStyle);
-        add(titleLabel).spaceBottom(100);
+        add(titleLabel).padBottom(100).padTop(20);
     }
 
     /**

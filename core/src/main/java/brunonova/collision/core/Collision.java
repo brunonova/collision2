@@ -44,6 +44,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.async.AsyncExecutor;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 
@@ -57,6 +58,7 @@ public class Collision extends Game {
     private ShapeRenderer shapeRenderer;
     private AssetManager assetManager;
     private I18NBundle i18n;
+    private AsyncExecutor asyncExecutor;
     private final int width;
     private final int height;
 
@@ -88,6 +90,7 @@ public class Collision extends Game {
 	public void create() {
 		batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
+        asyncExecutor = new AsyncExecutor(5);
         loadAssets();
 
         Gdx.graphics.setTitle(t("game.title"));
@@ -122,6 +125,7 @@ public class Collision extends Game {
         if(assetManager != null) assetManager.dispose();
         if(shapeRenderer != null) shapeRenderer.dispose();
         if(batch != null) batch.dispose();
+        asyncExecutor.dispose();
 	}
 
     /**
@@ -271,6 +275,17 @@ public class Collision extends Game {
     }
 
     /**
+     * Saves the user preferences to disk.
+     */
+    public void savePreferences() {
+        // Flush the preferences asynchronously, so avoid any UI freezes
+        asyncExecutor.submit(() -> {
+            getPreferences().flush();
+            return true;
+        });
+    }
+
+    /**
      * Starts the game by switching to the game screen.
      */
     public void startGame() {
@@ -386,9 +401,9 @@ public class Collision extends Game {
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
 
-        // Persist the preference
+        // Save the preference
         getPreferences().putString("difficulty", difficulty.toString());
-        getPreferences().flush();
+        savePreferences();
     }
 
     /**
@@ -406,9 +421,9 @@ public class Collision extends Game {
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
 
-        // Persist the preference
+        // Save the preference
         getPreferences().putString("gameMode", gameMode.toString());
-        getPreferences().flush();
+        savePreferences();
     }
 
     /**
@@ -426,9 +441,9 @@ public class Collision extends Game {
     public void setShowFPS(boolean showFPS) {
         this.showFPS = showFPS;
 
-        // Persist the preference
+        // Save the preference
         getPreferences().putBoolean("showFPS", showFPS);
-        getPreferences().flush();
+        savePreferences();
     }
 
     /**
@@ -446,9 +461,9 @@ public class Collision extends Game {
     public void setVolume(float volume) {
         this.volume = volume;
 
-        // Persist the preference
+        // Save the preference
         getPreferences().putFloat("volume", volume);
-        getPreferences().flush();
+        savePreferences();
     }
 
     /**
@@ -466,9 +481,9 @@ public class Collision extends Game {
     public void setFullScreen(boolean fullScreen) {
         this.fullScreen = fullScreen;
 
-        // Persist the preference
+        // Save the preference
         getPreferences().putBoolean("fullScreen", fullScreen);
-        getPreferences().flush();
+        savePreferences();
 
         // Make the switch to full screen or windowed mode, accordingly
         if(fullScreen) {

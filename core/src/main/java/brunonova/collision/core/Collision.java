@@ -54,7 +54,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Collision extends Game {
     private static final String TAG = Game.class.getName();
 
-	private SpriteBatch batch;
+    private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private AssetManager assetManager;
     private I18NBundle i18n;
@@ -86,9 +86,9 @@ public class Collision extends Game {
         this.height = height;
     }
 
-	@Override
-	public void create() {
-		batch = new SpriteBatch();
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         asyncExecutor = new AsyncExecutor(5);
         loadAssets();
@@ -103,7 +103,7 @@ public class Collision extends Game {
         if(isFullScreen()) {
             switchToFullScreen();
         }
-	}
+    }
 
     @Override
     public void render() {
@@ -119,14 +119,14 @@ public class Collision extends Game {
         }
     }
 
-	@Override
-	public void dispose() {
+    @Override
+    public void dispose() {
         super.dispose();
         if(assetManager != null) assetManager.dispose();
         if(shapeRenderer != null) shapeRenderer.dispose();
         if(batch != null) batch.dispose();
         asyncExecutor.dispose();
-	}
+    }
 
     /**
      * Loads all game assets, blocking while doing so.

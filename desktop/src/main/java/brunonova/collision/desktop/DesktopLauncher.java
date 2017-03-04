@@ -34,7 +34,7 @@ import joptsimple.OptionSet;
 public class DesktopLauncher {
     private static final String TAG = DesktopLauncher.class.getName();
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         // Parse comand-line arguments
         OptionParser parser = new OptionParser();
         parser.acceptsAll(Arrays.asList("h", "help"), "show this help message and exit")
@@ -57,17 +57,21 @@ public class DesktopLauncher {
             System.exit(0);
         }
 
-        // Configure and start the game
-        // TODO: change preferences file location
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        // Configure the game
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Collision";
         config.vSyncEnabled = true;
         config.width = Constants.WINDOW_WIDTH;
         config.height = Constants.WINDOW_HEIGHT;
         config.resizable = true;
+
+        // TODO: change preferences file location
+        // Add the icons for the window title bar
         config.addIcon(Constants.RES_PATH + "/icons/icon-128x128.png", Files.FileType.Internal);
         config.addIcon(Constants.RES_PATH + "/icons/icon-32x32.png", Files.FileType.Internal);
         config.addIcon(Constants.RES_PATH + "/icons/icon-16x16.png", Files.FileType.Internal);
-		LwjglApplication app = new LwjglApplication(new Collision(config.width, config.height), config);
+
+        // Start the game
+        LwjglApplication app = new LwjglApplication(new Collision(config.width, config.height), config);
 	}
 }

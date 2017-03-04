@@ -80,9 +80,13 @@ public class Player extends Ball {
             if(Gdx.input.isKeyPressed(Input.Keys.UP)) dy += KEYBOARD_SPEED * delta;
 
             // Mouse movement
-            // TODO: impose speed limit to avoid "teleporting"
             dx += Gdx.input.getDeltaX();
             dy -= Gdx.input.getDeltaY();
+
+            // Impose a "speed limit" to avoid "teleporting"
+            float maxSpeed = getRadius() * 4;
+            dx = Math.min(Math.max(dx, -maxSpeed), maxSpeed);
+            dy = Math.min(Math.max(dy, -maxSpeed), maxSpeed);
 
             // Move the player
             if(dx != 0 || dy != 0) {

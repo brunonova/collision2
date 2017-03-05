@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class Menu extends Table {
     // Styles
     private Label.LabelStyle titleStyle, labelStyle;
     private TextButton.TextButtonStyle buttonStyle, choiceButtonStyle;
+    private TextField.TextFieldStyle textFieldStyle;
     private final Color textColor;
 
     // Widgets
@@ -154,6 +156,30 @@ public class Menu extends Table {
     }
 
     /**
+     * Adds a text field with a label to the menu.
+     * @param labelText Text of the label.
+     * @param defaultText Default text of the field.
+     * @return The created text field.
+     */
+    public TextField addTextField(String labelText, String defaultText) {
+        row();  // add a row
+
+        // Create a table for this row
+        Table row = new Table();
+        add(row);
+
+        // Create the label
+        Label label = new Label(labelText, labelStyle);
+        row.add(label);
+
+        // Create the text field
+        TextField textField = new TextField(defaultText, textFieldStyle);
+        row.add(textField).padLeft(20);
+
+        return textField;
+    }
+
+    /**
      * Creates the styles for the widgets.
      */
     private void setupStyles() {
@@ -177,6 +203,13 @@ public class Menu extends Table {
         choiceButtonStyle.overFontColor = Color.FOREST;
         choiceButtonStyle.downFontColor = Color.GREEN;
         choiceButtonStyle.checkedFontColor = Color.RED;
+
+        // Style of the text fields
+        textFieldStyle = new TextField.TextFieldStyle();
+        textFieldStyle.font = game.getFont("font-menu.ttf");
+        textFieldStyle.fontColor = textColor;
+        textFieldStyle.cursor = new RectangleDrawable(game.getShapeRenderer(), textColor);
+        textFieldStyle.selection = new RectangleDrawable(game.getShapeRenderer(), Color.GRAY);
     }
 
     /**

@@ -21,6 +21,7 @@ import brunonova.collision.core.screens.GameScreen;
 import static brunonova.collision.core.Constants.RES_PATH;
 import brunonova.collision.core.enums.GameMode;
 import brunonova.collision.core.screens.BaseScreen;
+import brunonova.collision.core.screens.LoadingScreen;
 import brunonova.collision.core.screens.MenuScreen;
 import brunonova.collision.core.screens.OptionsScreen;
 import brunonova.collision.core.screens.PauseScreen;
@@ -72,6 +73,7 @@ public class Collision extends Game {
     private boolean fullScreen;
 
     // Screens
+    private LoadingScreen loadingScreen;
     private MenuScreen menuScreen;
     private OptionsScreen optionsScreen;
     private GameScreen gameScreen;
@@ -93,18 +95,7 @@ public class Collision extends Game {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         asyncExecutor = new AsyncExecutor(5);
-        loadAssets();
-
-        Gdx.graphics.setTitle(t("game.title"));
-        loadPreferences();
-
-        menuScreen = new MenuScreen(this);
-        setScreen(menuScreen);
-
-        // Switch to full screen mode if it's the user preference
-        if(isFullScreen()) {
-            switchToFullScreen();
-        }
+        startLoadingAssets();
     }
 
     @Override
@@ -127,13 +118,63 @@ public class Collision extends Game {
     }
 
     /**
-     * Loads all game assets, blocking while doing so.
+     * Shows the "Loading..." screen and starts loading the game assets.
+     */
+    private void startLoadingAssets() {
+        // Start loading the assets (the assets for the "Loading" screen will be
+        // fully loaded when this method returns)
+        loadAssets();
+
+        // Translate the window title and show the loading screen, while the
+        // rest of the assets load
+        Gdx.graphics.setTitle(t("game.title"));
+        loadingScreen = new LoadingScreen(this);
+        setScreen(loadingScreen);
+    }
+
+    /**
+     * Called when the assets have finished loading, to show the menu screen.
+     */
+    public void finishedLoadingAssets() {
+        // Load the user preferences
+        loadPreferences();
+
+        // Create and show the menu screen
+        menuScreen = new MenuScreen(this);
+        setScreen(menuScreen);
+        loadingScreen.dispose();
+
+        // Switch to full screen mode if it's the user preference
+        if(isFullScreen()) {
+            switchToFullScreen();
+        }
+    }
+
+    /**
+     * Loads all game assets.
+     * <p>First, it loads the assets needed by the "Loading" screen
+     * synchronously. Then it queues all the remaining assets to be loaded later
+     * asynchronously.</p>
      */
     private void loadAssets() {
         assetManager = new AssetManager();
 
         // Load i18n bundle
         i18n = I18NBundle.createBundle(Gdx.files.internal(RES_PATH + "/i18n/Messages"));
+
+        // Load the font needed by the "Loading" screen
+        FileHandleResolver resolver = new InternalFileHandleResolver();
+        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+        loadFont("font-title.ttf", "Ubuntu-B.ttf", 60);
+
+        // Block to load the previous assets synchronously
+        assetManager.finishLoading();
+
+        // Load the rest of the fonts
+        loadFont("font-hud.ttf", "Ubuntu-M.ttf", 22);
+        loadFont("font-pause.ttf", "Ubuntu-B.ttf", 96, Color.BLACK, 5, 5);
+        loadFont("font-menu.ttf", "Ubuntu-M.ttf", 32);
 
         // Load images
         assetManager.load(RES_PATH + "/images/player.png", Texture.class);
@@ -146,18 +187,6 @@ public class Collision extends Game {
 
         // Load sounds
         assetManager.load(RES_PATH + "/sounds/coin.mp3", Sound.class);
-
-        // Load fonts
-        FileHandleResolver resolver = new InternalFileHandleResolver();
-        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-        assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
-        loadFont("font-title.ttf", "Ubuntu-B.ttf", 60);
-        loadFont("font-hud.ttf", "Ubuntu-M.ttf", 22);
-        loadFont("font-pause.ttf", "Ubuntu-B.ttf", 96, Color.BLACK, 5, 5);
-        loadFont("font-menu.ttf", "Ubuntu-M.ttf", 32);
-
-        // Block to load all assets synchronously
-        assetManager.finishLoading();
     }
 
     /**

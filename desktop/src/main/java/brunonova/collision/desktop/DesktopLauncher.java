@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.apache.commons.lang3.SystemUtils;
 
 
 /**
@@ -65,7 +66,21 @@ public class DesktopLauncher {
         config.height = Constants.WINDOW_HEIGHT;
         config.resizable = true;
 
-        // TODO: change preferences file location
+        // Set preferences file location according to the OS
+        if(SystemUtils.IS_OS_WINDOWS) {
+            String appDataDir = System.getenv("APPDATA");
+            if(appDataDir != null) {
+                config.preferencesDirectory = System.getenv("APPDATA") + "\\collision\\";
+                config.preferencesFileType = Files.FileType.Absolute;
+            } else {
+                config.preferencesDirectory = "AppData\\Roaming\\collision\\";
+            }
+        } else if(SystemUtils.IS_OS_LINUX) {
+            config.preferencesDirectory = ".config/collision";
+        } else if(SystemUtils.IS_OS_MAC) {
+            config.preferencesDirectory = "Library/Application Support/collision/";
+        }
+
         // Add the icons for the window title bar
         config.addIcon(Constants.RES_PATH + "/icons/icon-128x128.png", Files.FileType.Internal);
         config.addIcon(Constants.RES_PATH + "/icons/icon-32x32.png", Files.FileType.Internal);

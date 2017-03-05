@@ -24,6 +24,7 @@ import brunonova.collision.core.screens.BaseScreen;
 import brunonova.collision.core.screens.MenuScreen;
 import brunonova.collision.core.screens.OptionsScreen;
 import brunonova.collision.core.screens.PauseScreen;
+import brunonova.collision.core.screens.QuitScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -75,6 +76,7 @@ public class Collision extends Game {
     private OptionsScreen optionsScreen;
     private GameScreen gameScreen;
     private PauseScreen pauseScreen;
+    private QuitScreen quitScreen;
 
     /**
      * Creates the game.
@@ -111,11 +113,7 @@ public class Collision extends Game {
 
         // Enable or disable full screen mode when pressing F11
         if(Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
-            if(Gdx.graphics.isFullscreen()) {
-                Gdx.graphics.setWindowedMode(getWidth(), getHeight());
-            } else {
-                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-            }
+            setFullScreen(!isFullScreen());
         }
     }
 
@@ -277,7 +275,7 @@ public class Collision extends Game {
     /**
      * Saves the user preferences to disk.
      */
-    public void savePreferences() {
+    public synchronized void savePreferences() {
         // Flush the preferences asynchronously, so avoid any UI freezes
         asyncExecutor.submit(() -> {
             getPreferences().flush();
@@ -320,6 +318,19 @@ public class Collision extends Game {
         pauseScreen.setPreviousScreen(getScreen());
         pauseScreen.setBackground(takeScreenshot(screen));
         setScreen(pauseScreen);
+    }
+
+    /**
+     * Show the screen that asks confirmation from the user to quit the game
+     * screen.
+     * <p>This method should be called at the end of the {@code render()}
+     * method, or else the screenshot taken to be used as the background of the
+     * pause screen won't be correct.</p>
+     */
+    public void confirmQuit() {
+        if(quitScreen == null) quitScreen = new QuitScreen(this);
+        quitScreen.setBackground(takeScreenshot(getGameScreen()));
+        setScreen(quitScreen);
     }
 
     /**

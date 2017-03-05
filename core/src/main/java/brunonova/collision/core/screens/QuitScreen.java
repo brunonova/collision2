@@ -17,32 +17,25 @@
 package brunonova.collision.core.screens;
 
 import brunonova.collision.core.Collision;
+import brunonova.collision.core.widgets.Menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Align;
 
 /**
- * The "PAUSE" screen.
- * <p>Call {@link #setPreviousScreen(com.badlogic.gdx.Screen)} to set the screen
- * that the game should return to when it is unpaused.</p>
+ * Screen that asks confirmation from the user to quit.
  */
-public class PauseScreen extends BaseScreen {
-    /** The screen to return to when the game is unpaused. */
-    protected Screen previousScreen;
+public class QuitScreen extends BaseScreen {
     /** The (optional) background image. */
     protected Texture background;
+    private Menu menu;
 
     /**
      * Creates the screen.
      * @param game The game.
      */
-    public PauseScreen(Collision game) {
+    public QuitScreen(Collision game) {
         super(game);
         backgroundColor = Color.BLACK;
     }
@@ -51,22 +44,10 @@ public class PauseScreen extends BaseScreen {
     public void create() {
         super.create();
 
-        // Prepare the font
-        BitmapFont font = game.getFont("font-pause.ttf");
-
-        // Add the "PAUSE" label
-        Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
-        Label label = new Label(game.t("pause"), style);
-        label.setPosition(game.getWidth() / 2, game.getHeight() / 2, Align.center);
-        addActor(label);
-
-        // Add a blinking animation to the label
-        label.addAction(Actions.forever(
-                Actions.sequence(
-                        Actions.fadeOut(0.3f),
-                        Actions.fadeIn(0.3f)
-                )
-        ));
+        // Create the menu
+        menu = addActor(new Menu(game, game.t("quit.title"), Color.WHITE));
+        menu.addButton(game.t("quit.yes"), this::yes);
+        menu.addButton(game.t("quit.no"), this::no);
     }
 
     @Override
@@ -85,9 +66,9 @@ public class PauseScreen extends BaseScreen {
             batch.end();
         }
 
-        // Unpause the game when 'P' is pressed
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            game.setScreen(previousScreen);
+        // Cancel when Escape is pressed
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            no();
         }
     }
 
@@ -98,19 +79,18 @@ public class PauseScreen extends BaseScreen {
     }
 
     /**
-     * Returns the screen to return to when the game is unpaused.
-     * @return The screen to return to when the game is unpaused.
+     * Quits to the menu screen.
      */
-    public Screen getPreviousScreen() {
-        return previousScreen;
+    public void yes() {
+        game.getGameScreen().dispose();
+        game.returnToMenu();
     }
 
     /**
-     * Sets the screen to return to when the game is unpaused.
-     * @param previousScreen The new screen to return to.
+     * Returns to the game screen.
      */
-    public void setPreviousScreen(Screen previousScreen) {
-        this.previousScreen = previousScreen;
+    public void no() {
+        game.startGame();
     }
 
     /**

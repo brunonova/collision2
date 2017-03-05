@@ -155,12 +155,6 @@ public class GameScreen extends BaseScreen {
         super.act(delta);
 
         if(!gameEnding) {
-            // Exit if the Escape key is presses
-            if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-                dispose();
-                game.returnToMenu();
-            }
-
             // Update timers
             time += delta;
             timerNewEnemy -= delta;
@@ -271,12 +265,19 @@ public class GameScreen extends BaseScreen {
 
         batch.end();
 
-        // Pause the game when 'P' is pressed
-        // This was put at the end of the "render" method so that the screenshot
-        // taken by this method to be used as the background of the "PAUSE"
-        // screen is complete.
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P) && !gameEnding) {
-            game.pauseGame(this);
+        if(!gameEnding) {
+            // Pause the game when 'P' is pressed
+            // This was put at the end of the "render" method so that the screenshot
+            // taken by this method to be used as the background of the "PAUSE"
+            // screen is complete.
+            if(Gdx.input.isKeyJustPressed(Input.Keys.P) && !gameEnding) {
+                game.pauseGame(this);
+            }
+
+            // Exit if the Escape key is pressed
+            if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                game.confirmQuit();
+            }
         }
     }
 
@@ -390,6 +391,7 @@ public class GameScreen extends BaseScreen {
         // Stop and disable all enemy balls
         for(Enemy enemy: enemies) {
             enemy.disable();
+            enemy.clearActions();
         }
 
         // Fade-out the player, then end the game

@@ -38,6 +38,7 @@ public class Menu extends Table {
     // Styles
     private Label.LabelStyle titleStyle, labelStyle;
     private TextButton.TextButtonStyle buttonStyle, choiceButtonStyle;
+    private final Color textColor;
 
     // Widgets
     private final Label titleLabel;
@@ -48,12 +49,23 @@ public class Menu extends Table {
      * @param game The game.
      * @param title Title of the menu.
      */
-    @SuppressWarnings("OverridableMethodCallInConstructor")
     public Menu(Collision game, String title) {
+        this(game, title, Color.BLACK);
+    }
+
+    /**
+     * Creates the menu.
+     * @param game The game.
+     * @param title Title of the menu.
+     * @param textColor Color of the text (default: black).
+     */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public Menu(Collision game, String title, Color textColor) {
         this.game = game;
         setFillParent(true);
         top();
         buttons = new ArrayList<>();
+        this.textColor = textColor;
         setupStyles();
 
         // Add the title label
@@ -146,22 +158,22 @@ public class Menu extends Table {
      */
     private void setupStyles() {
         // Style of the title
-        titleStyle = new Label.LabelStyle(game.getFont("font-title.ttf"), Color.BLACK);
+        titleStyle = new Label.LabelStyle(game.getFont("font-title.ttf"), textColor);
 
         // Style of the labels
-        labelStyle = new Label.LabelStyle(game.getFont("font-menu.ttf"), Color.BLACK);
+        labelStyle = new Label.LabelStyle(game.getFont("font-menu.ttf"), textColor);
 
         // Style of the buttons
         buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.font = game.getFont("font-menu.ttf");
-        buttonStyle.fontColor = Color.BLACK;
+        buttonStyle.fontColor = textColor;
         buttonStyle.overFontColor = Color.FOREST;
         buttonStyle.downFontColor = Color.GREEN;
 
         // Style of the radio buttons
         choiceButtonStyle = new TextButton.TextButtonStyle();
         choiceButtonStyle.font = game.getFont("font-menu.ttf");
-        choiceButtonStyle.fontColor = Color.BLACK;
+        choiceButtonStyle.fontColor = textColor;
         choiceButtonStyle.overFontColor = Color.FOREST;
         choiceButtonStyle.downFontColor = Color.GREEN;
         choiceButtonStyle.checkedFontColor = Color.RED;

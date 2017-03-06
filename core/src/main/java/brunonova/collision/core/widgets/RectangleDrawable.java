@@ -42,10 +42,10 @@ public class RectangleDrawable extends BaseDrawable {
 
     @Override
     public void draw(Batch batch, float x, float y, float width, float height) {
+        // Can't use both a Batch and a ShapeRenderer at the same time
         batch.end();
 
         // Draw the rectangle using a shape renderer
-        // TODO: find a way to do this without batch.end()/batch.begin()
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(batch.getColor().mul(color));
         shapeRenderer.rect(x, y, width, height);

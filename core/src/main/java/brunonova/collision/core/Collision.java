@@ -54,7 +54,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * Main class of the game.
  */
 public class Collision extends Game {
-    private static final String TAG = Game.class.getName();
+    private static final String TAG = Collision.class.getName();
 
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
@@ -66,6 +66,7 @@ public class Collision extends Game {
 
     // Options
     private Preferences preferences;
+    private HighScores highScores;
     private Difficulty difficulty;
     private GameMode gameMode;
     private boolean showFPS;
@@ -95,6 +96,12 @@ public class Collision extends Game {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         asyncExecutor = new AsyncExecutor(5);
+
+        // Load the user preferences and high scores
+        loadPreferences();
+        highScores = new HighScores(this);
+
+        // Load the assets
         startLoadingAssets();
     }
 
@@ -136,9 +143,6 @@ public class Collision extends Game {
      * Called when the assets have finished loading, to show the menu screen.
      */
     public void finishedLoadingAssets() {
-        // Load the user preferences
-        loadPreferences();
-
         // Create and show the menu screen
         menuScreen = new MenuScreen(this);
         setScreen(menuScreen);
@@ -296,7 +300,7 @@ public class Collision extends Game {
      */
     public Preferences getPreferences() {
         if(preferences == null) {
-            preferences = Gdx.app.getPreferences(getClass().getName() + ".xml");
+            preferences = Gdx.app.getPreferences("options.xml");
         }
         return preferences;
     }
@@ -304,11 +308,13 @@ public class Collision extends Game {
     /**
      * Saves the user preferences to disk.
      */
-    public synchronized void savePreferences() {
+    public void savePreferences() {
         // Flush the preferences asynchronously, so avoid any UI freezes
         asyncExecutor.submit(() -> {
-            getPreferences().flush();
-            return true;
+            synchronized(Collision.this) {
+                getPreferences().flush();
+                return true;
+            }
         });
     }
 
@@ -539,6 +545,22 @@ public class Collision extends Game {
      */
     public GameScreen getGameScreen() {
         return gameScreen;
+    }
+
+    /**
+     * Returns the high scores.
+     * @return The high scores.
+     */
+    public HighScores getHighScores() {
+        return highScores;
+    }
+
+    /**
+     * Returns the executor for asynchronous operations.
+     * @return The asynchronous executor.
+     */
+    public AsyncExecutor getAsyncExecutor() {
+        return asyncExecutor;
     }
 
     /**

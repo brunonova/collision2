@@ -21,6 +21,7 @@ import brunonova.collision.core.screens.GameScreen;
 import static brunonova.collision.core.Constants.RES_PATH;
 import brunonova.collision.core.enums.GameMode;
 import brunonova.collision.core.screens.BaseScreen;
+import brunonova.collision.core.screens.GameOverScreen;
 import brunonova.collision.core.screens.LoadingScreen;
 import brunonova.collision.core.screens.MenuScreen;
 import brunonova.collision.core.screens.OptionsScreen;
@@ -80,6 +81,7 @@ public class Collision extends Game {
     private GameScreen gameScreen;
     private PauseScreen pauseScreen;
     private QuitScreen quitScreen;
+    private GameOverScreen gameOverScreen;
 
     /**
      * Creates the game.
@@ -366,6 +368,16 @@ public class Collision extends Game {
         if(quitScreen == null) quitScreen = new QuitScreen(this);
         quitScreen.setBackground(takeScreenshot(getGameScreen()));
         setScreen(quitScreen);
+    }
+
+    /**
+     * Shows the "game over" screen.
+     * @param score The achieved score.
+     */
+    public void showGameOverScreen(int score) {
+        if(gameOverScreen == null) gameOverScreen = new GameOverScreen(this);
+        gameOverScreen.setData(gameMode, difficulty, score);
+        setScreen(gameOverScreen);
     }
 
     /**

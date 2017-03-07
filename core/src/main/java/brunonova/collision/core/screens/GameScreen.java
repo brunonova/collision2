@@ -24,6 +24,7 @@ import brunonova.collision.core.actors.Enemy;
 import brunonova.collision.core.actors.Missile;
 import brunonova.collision.core.actors.Player;
 import brunonova.collision.core.enums.BonusType;
+import brunonova.collision.core.enums.Difficulty;
 import brunonova.collision.core.enums.GameMode;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -401,9 +402,18 @@ public class GameScreen extends BaseScreen {
         player.addAction(Actions.sequence(
                 Actions.fadeOut(2),
                 Actions.run(() -> {
-                    // Exit the game
-                    dispose();
-                    game.returnToMenu();
+                    // Get the score according to the game mode
+                    int score = (game.getGameMode() == GameMode.TIME) ? ((int) time) : coins;
+
+                    if(game.getHighScores().isHighScore(game.getGameMode(), game.getDifficulty(), score)) {
+                        // Go to the "game over" screen
+                        dispose();
+                        game.showGameOverScreen(score);
+                    } else {
+                        // Return to the menu
+                        dispose();
+                        game.returnToMenu();
+                    }
                 })));
     }
 

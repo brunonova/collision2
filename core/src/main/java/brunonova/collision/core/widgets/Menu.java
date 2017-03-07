@@ -174,7 +174,7 @@ public class Menu extends Table {
 
         // Create the text field
         TextField textField = new TextField(defaultText, textFieldStyle);
-        row.add(textField).padLeft(20);
+        row.add(textField).width(200).padLeft(20);
 
         return textField;
     }

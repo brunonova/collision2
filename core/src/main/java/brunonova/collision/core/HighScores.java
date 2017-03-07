@@ -184,11 +184,10 @@ public final class HighScores {
      * (i.e. if it's high enough for the specified game mode and difficulty).
      * @param mode The game mode.
      * @param difficulty The difficulty.
-     * @param name The name of the player.
      * @param score The score.
      * @return {@code true} if it's a high score.
      */
-    public synchronized boolean isHighScore(GameMode mode, Difficulty difficulty, String name, int score) {
+    public synchronized boolean isHighScore(GameMode mode, Difficulty difficulty, int score) {
         if(score <= 0) {
             // A score of 0 is not an high score
             return false;

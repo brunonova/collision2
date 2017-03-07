@@ -84,10 +84,16 @@ public class PauseScreen extends BaseScreen {
             batch.setColor(oldColor);
             batch.end();
         }
+    }
 
+    @Override
+    public boolean keyDown(int keycode) {
         // Unpause the game when 'P' is pressed
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        if(keycode == Input.Keys.P) {
             game.setScreen(previousScreen);
+            return true;
+        } else {
+            return false;
         }
     }
 

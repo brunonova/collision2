@@ -19,6 +19,8 @@ package brunonova.collision.core.screens;
 import brunonova.collision.core.Collision;
 import brunonova.collision.core.Constants;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -34,7 +36,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Base class for all game screens.
  */
-public abstract class BaseScreen implements Screen {
+public abstract class BaseScreen implements Screen, InputProcessor {
     /** The game. */
     protected final Collision game;
     /** The game's sprite batch. */
@@ -43,6 +45,8 @@ public abstract class BaseScreen implements Screen {
     protected final ShapeRenderer shapeRenderer;
     /** The game's asset manager. */
     protected final AssetManager assetManager;
+    /** The input multiplexer. */
+    protected final InputMultiplexer inputMultiplexer;
     /** The stage for this screen (created in the {@link #create()} method). */
     protected Stage stage;
     /** The color used to clear the screen (also affects the black bars). */
@@ -62,6 +66,7 @@ public abstract class BaseScreen implements Screen {
         this.batch = game.getBatch();
         this.shapeRenderer = game.getShapeRenderer();
         this.assetManager = game.getAssetManager();
+        this.inputMultiplexer = new InputMultiplexer();
     }
 
     /**
@@ -69,7 +74,11 @@ public abstract class BaseScreen implements Screen {
      * <p>When overriding this method, call {@code super.create()}!</p>
      */
     public void create() {
-        this.stage = new Stage(new FitViewport(game.getWidth(), game.getHeight()), batch);
+        stage = new Stage(new FitViewport(game.getWidth(), game.getHeight()), batch);
+
+        // Add the screen and the stage as input processors
+        inputMultiplexer.addProcessor(this);
+        inputMultiplexer.addProcessor(stage);
     }
 
     /**
@@ -87,7 +96,7 @@ public abstract class BaseScreen implements Screen {
 
         // Set this screen as the input processor, or else the previous screen
         // will still be the input processor
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     /**
@@ -177,6 +186,46 @@ public abstract class BaseScreen implements Screen {
     @Override
     public void resume() {
 
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 
     /**

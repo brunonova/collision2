@@ -65,12 +65,13 @@ public class OptionsScreen extends BaseScreen {
     }
 
     @Override
-    public void act(float delta) {
-        super.act(delta);
-
+    public boolean keyDown(int keycode) {
         // Return to the main menu when the Escape key is pressed
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if(keycode == Input.Keys.ESCAPE) {
             back();
+            return true;
+        } else {
+            return false;
         }
     }
 

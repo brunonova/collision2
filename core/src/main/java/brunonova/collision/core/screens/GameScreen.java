@@ -264,21 +264,24 @@ public class GameScreen extends BaseScreen {
         }
 
         batch.end();
+    }
 
+    @Override
+    public boolean keyDown(int keycode) {
         if(!gameEnding) {
-            // Pause the game when 'P' is pressed
-            // This was put at the end of the "render" method so that the screenshot
-            // taken by this method to be used as the background of the "PAUSE"
-            // screen is complete.
-            if(Gdx.input.isKeyJustPressed(Input.Keys.P) && !gameEnding) {
-                game.pauseGame(this);
-            }
+            switch(keycode) {
+                // Exit if the Escape key is pressed
+                case Input.Keys.ESCAPE:
+                    game.confirmQuit();
+                    return true;
 
-            // Exit if the Escape key is pressed
-            if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-                game.confirmQuit();
+                // Pause the game when 'P' is pressed
+                case Input.Keys.P:
+                    game.pauseGame(this);
+                    return true;
             }
         }
+        return false;
     }
 
     @Override

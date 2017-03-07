@@ -65,10 +65,16 @@ public class QuitScreen extends BaseScreen {
             batch.setColor(oldColor);
             batch.end();
         }
+    }
 
+    @Override
+    public boolean keyDown(int keycode) {
         // Cancel when Escape is pressed
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if(keycode == Input.Keys.ESCAPE) {
             no();
+            return true;
+        } else {
+            return false;
         }
     }
 

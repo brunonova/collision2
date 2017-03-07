@@ -29,7 +29,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
  */
 public class MenuScreen extends BaseScreen {
     // TODO: keyboard navigation in menus
-    // TODO: use event-driven input handling?
     private Menu menu;
 
     /**
@@ -61,12 +60,13 @@ public class MenuScreen extends BaseScreen {
     }
 
     @Override
-    public void act(float delta) {
-        super.act(delta);
-
+    public boolean keyDown(int keycode) {
         // Quit game when the Escape key is pressed
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if(keycode == Input.Keys.ESCAPE) {
             quit();
+            return true;
+        } else {
+            return false;
         }
     }
 

@@ -227,4 +227,52 @@ public class Menu extends Table {
     public List<TextButton> getButtons() {
         return buttons;
     }
+
+    /**
+     * Returns the style used by the title.
+     * @return Title style.
+     */
+    public Label.LabelStyle getTitleStyle() {
+        return titleStyle;
+    }
+
+    /**
+     * Returns the style used by labels.
+     * @return Label style.
+     */
+    public Label.LabelStyle getLabelStyle() {
+        return labelStyle;
+    }
+
+    /**
+     * Returns the style used by buttons.
+     * @return Button style.
+     */
+    public TextButton.TextButtonStyle getButtonStyle() {
+        return buttonStyle;
+    }
+
+    /**
+     * Returns the style used by multiple-choice buttons.
+     * @return Multiple-choice button style.
+     */
+    public TextButton.TextButtonStyle getChoiceButtonStyle() {
+        return choiceButtonStyle;
+    }
+
+    /**
+     * Returns the style used by text fields.
+     * @return Text field style.
+     */
+    public TextField.TextFieldStyle getTextFieldStyle() {
+        return textFieldStyle;
+    }
+
+    /**
+     * Returns the foreground color of the menu items.
+     * @return Foreground color.
+     */
+    public Color getTextColor() {
+        return textColor;
+    }
 }

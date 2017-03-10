@@ -22,6 +22,7 @@ import static brunonova.collision.core.Constants.RES_PATH;
 import brunonova.collision.core.enums.GameMode;
 import brunonova.collision.core.screens.BaseScreen;
 import brunonova.collision.core.screens.GameOverScreen;
+import brunonova.collision.core.screens.HighScoresScreen;
 import brunonova.collision.core.screens.LoadingScreen;
 import brunonova.collision.core.screens.MenuScreen;
 import brunonova.collision.core.screens.OptionsScreen;
@@ -82,6 +83,7 @@ public class Collision extends Game {
     private PauseScreen pauseScreen;
     private QuitScreen quitScreen;
     private GameOverScreen gameOverScreen;
+    private HighScoresScreen highScoresScreen;
 
     /**
      * Creates the game.
@@ -378,6 +380,25 @@ public class Collision extends Game {
         if(gameOverScreen == null) gameOverScreen = new GameOverScreen(this);
         gameOverScreen.setData(gameMode, difficulty, score);
         setScreen(gameOverScreen);
+    }
+
+    /**
+     * Shows the High Scores screen.
+     */
+    public void showHighScores() {
+        if(highScoresScreen != null)  highScoresScreen.dispose();
+        highScoresScreen = new HighScoresScreen(this);
+        setScreen(highScoresScreen);
+    }
+
+    /**
+     * Shows the High Scores screen.
+     * @param scoreIndexToHighlight The index of the score to highlight.
+     */
+    public void showHighScores(int scoreIndexToHighlight) {
+        if(highScoresScreen != null)  highScoresScreen.dispose();
+        highScoresScreen = new HighScoresScreen(this, scoreIndexToHighlight);
+        setScreen(highScoresScreen);
     }
 
     /**

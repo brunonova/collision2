@@ -24,7 +24,6 @@ import brunonova.collision.core.actors.Enemy;
 import brunonova.collision.core.actors.Missile;
 import brunonova.collision.core.actors.Player;
 import brunonova.collision.core.enums.BonusType;
-import brunonova.collision.core.enums.Difficulty;
 import brunonova.collision.core.enums.GameMode;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

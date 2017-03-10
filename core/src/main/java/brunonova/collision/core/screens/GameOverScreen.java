@@ -71,8 +71,8 @@ public class GameOverScreen extends BaseScreen {
     private void ok() {
         String name = nameField.getText();
         if(name != null && !name.isEmpty()) {
-            game.getHighScores().addScore(mode, difficulty, name, score);
-            ignore();  // TODO: go to the high scores screen
+            int index = game.getHighScores().addScore(mode, difficulty, name, score);
+            game.showHighScores(index);
         } else {
             ignore();
         }

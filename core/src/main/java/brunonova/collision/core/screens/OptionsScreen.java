@@ -21,7 +21,6 @@ import brunonova.collision.core.enums.Difficulty;
 import brunonova.collision.core.enums.GameMode;
 import brunonova.collision.core.widgets.ButtonChoice;
 import brunonova.collision.core.widgets.Menu;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 /**

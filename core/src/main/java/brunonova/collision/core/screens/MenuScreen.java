@@ -88,7 +88,7 @@ public class MenuScreen extends BaseScreen {
      * Opens the high scores screen.
      */
     private void highscores() {
-        // TODO
+        game.showHighScores();
     }
 
     /**

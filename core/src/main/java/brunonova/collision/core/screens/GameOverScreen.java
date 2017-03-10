@@ -20,6 +20,8 @@ import brunonova.collision.core.Collision;
 import brunonova.collision.core.enums.Difficulty;
 import brunonova.collision.core.enums.GameMode;
 import brunonova.collision.core.widgets.Menu;
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
@@ -47,9 +49,16 @@ public class GameOverScreen extends BaseScreen {
     public void create() {
         super.create();
 
+        // Define the default player name
+        String defaultPlayerName = game.t("gameOver.defaultName");
+        if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
+            // If on the desktop, get the system user name
+            defaultPlayerName = System.getProperty("user.name");
+        }
+
         // Create the menu
         menu = addActor(new Menu(game, game.t("gameOver.title")));
-        nameField = menu.addTextField(game.t("gameOver.yourName"), game.t("gameOver.defaultName"));
+        nameField = menu.addTextField(game.t("gameOver.yourName"), defaultPlayerName);
         menu.addButton(game.t("gameOver.ok"), this::ok);
         menu.addButton(game.t("gameOver.ignore"), this::ignore);
     }

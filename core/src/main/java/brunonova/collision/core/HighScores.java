@@ -156,7 +156,7 @@ public final class HighScores {
             // Is there still space for a new high score?
             if(scores.size() < MAX_SCORES) {
                 scores.add(newScore);
-                index = scores.size();
+                index = scores.size() - 1;
             } else {
                 // No space. This is not an high score
                 return -1;

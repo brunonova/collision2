@@ -58,6 +58,14 @@ public class GameScreen extends BaseScreen {
     private BitmapFont hudFont;
     /** Sound played when the player catches a coin. */
     private Sound coinSound;
+    /** Sound played when the player catches a good bonus. */
+    private Sound bonusGoodSound;
+    /** Sound played when the player catches a bad bonus. */
+    private Sound bonusBadSound;
+    /** Sound played when the player loses. */
+    private Sound loseSound;
+    /** Sound played when the player achieves an high-score. */
+    private Sound highScoreSound;
 
     // Control variables
     /** Whether the game is ending (before the "Game Over" screen is shown). */
@@ -103,6 +111,10 @@ public class GameScreen extends BaseScreen {
 
         // Prepare the sounds
         coinSound = game.getSound("coin.mp3");
+        bonusGoodSound = game.getSound("bonus_good.mp3");
+        bonusBadSound = game.getSound("bonus_bad.mp3");
+        loseSound = game.getSound("lose.mp3");
+        highScoreSound = game.getSound("high_score.mp3");
 
         // Add the bonus (disabled and invisible)
         bonus = addActor(new Bonus(game));
@@ -203,6 +215,7 @@ public class GameScreen extends BaseScreen {
                 }
             }
 
+            // Detect collision between player and missile
             if(player.isEnabled() && !player.isInvulnerable()) {
                 if(missile.isEnabled() && player.overlaps(missile)) {
                     gameOver();
@@ -380,6 +393,10 @@ public class GameScreen extends BaseScreen {
                 missile.show();
                 break;
         }
+
+        // Play a sound
+        Sound sound = type.isGood() ? bonusGoodSound : bonusBadSound;
+        sound.play(game.getVolume());
     }
 
     /**
@@ -397,6 +414,9 @@ public class GameScreen extends BaseScreen {
             enemy.clearActions();
         }
 
+        // Play the "lose" sound
+        loseSound.play(game.getVolume());
+
         // Fade-out the player, then end the game
         player.addAction(Actions.sequence(
                 Actions.fadeOut(2),
@@ -408,6 +428,9 @@ public class GameScreen extends BaseScreen {
                         // Go to the "game over" screen
                         dispose();
                         game.showGameOverScreen(score);
+
+                        // Play the "high score" sound
+                        highScoreSound.play(game.getVolume());
                     } else {
                         // Return to the menu
                         dispose();

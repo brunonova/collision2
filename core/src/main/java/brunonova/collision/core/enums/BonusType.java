@@ -23,22 +23,24 @@ import com.badlogic.gdx.math.MathUtils;
  */
 public enum BonusType {
     /** Slows down the enemy balls by 50%. */
-    SLOW_DOWN_ENEMIES(6),
+    SLOW_DOWN_ENEMIES(6, true),
     /** Speeds up the enemy balls by 50%. */
-    SPEED_UP_ENEMIES(3),
+    SPEED_UP_ENEMIES(3, false),
     /** Freezes the enemy balls in place. */
-    FREEZE_ENEMIES(5),
+    FREEZE_ENEMIES(5, true),
     /** Freezes the player ball in place. */
-    FREEZE_PLAYER(0.6f),
+    FREEZE_PLAYER(0.6f, false),
     /** Makes the player invulnerable */
-    INVULNERABILITY(5),
+    INVULNERABILITY(5, true),
     /** A homing missile that tries to hit the player. */
-    MISSILE(5);
+    MISSILE(5, false);
 
     private final float duration;
+    private final boolean good;
 
-    private BonusType(float duration) {
+    private BonusType(float duration, boolean good) {
         this.duration = duration;
+        this.good = good;
     }
 
 
@@ -57,5 +59,13 @@ public enum BonusType {
      */
     public float getDuration() {
         return duration;
+    }
+
+    /**
+     * Returns whether this is a good bonus.
+     * @return {@code true} if it's a good bonus, {@code false} otherwise.
+     */
+    public boolean isGood() {
+        return good;
     }
 }

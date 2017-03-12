@@ -17,6 +17,7 @@
 package brunonova.collision.core.widgets;
 
 import brunonova.collision.core.Collision;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
@@ -46,6 +47,9 @@ public class Menu extends Table {
     private final Label titleLabel;
     private final List<TextButton> buttons;
 
+    // Sounds
+    private final Sound clickSound;
+
     /**
      * Creates the menu.
      * @param game The game.
@@ -73,6 +77,9 @@ public class Menu extends Table {
         // Add the title label
         titleLabel = new Label(title, titleStyle);
         add(titleLabel).padBottom(100).padTop(20);
+
+        // Prepare sound
+        clickSound = game.getSound("menu_click.mp3");
     }
 
     /**
@@ -93,6 +100,7 @@ public class Menu extends Table {
         button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                clickSound.play(game.getVolume());
                 action.run();
             }
         });
@@ -146,6 +154,7 @@ public class Menu extends Table {
                 public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                     TextButton button = (TextButton) actor;  // it's always a TextButton
                     if(button.isChecked()) {
+                        clickSound.play(game.getVolume());
                         choice.getAction().run(choice.getValue());
                     }
                 }

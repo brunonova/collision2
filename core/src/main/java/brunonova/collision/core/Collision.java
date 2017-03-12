@@ -199,6 +199,8 @@ public class Collision extends Game {
         assetManager.load(RES_PATH + "/sounds/bonus_bad.mp3", Sound.class);
         assetManager.load(RES_PATH + "/sounds/lose.mp3", Sound.class);
         assetManager.load(RES_PATH + "/sounds/high_score.mp3", Sound.class);
+        assetManager.load(RES_PATH + "/sounds/bounce.mp3", Sound.class);
+        assetManager.load(RES_PATH + "/sounds/menu_click.mp3", Sound.class);
     }
 
     /**

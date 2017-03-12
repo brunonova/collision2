@@ -17,6 +17,7 @@
 package brunonova.collision.core.actors;
 
 import brunonova.collision.core.Collision;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -29,6 +30,19 @@ public class Enemy extends Ball {
     public static final float MINIMUM_DISTANCE_TO_PLAYER = 100;
     /** Mass of the ball (used when balls collide). */
     public static final float MASS = 1;
+    /**
+     * Factor to multiply the game volume by when playing the "bounce" sound
+     * after an enemy ball collides with the window border.
+     */
+    public static final float BOUNCE_WITH_BORDER_VOLUME_FACTOR = 0.2f;
+    /**
+     * Factor to multiply the game volume by when playing the "bounce" sound
+     * after an enemy ball collides with another enemy ball.
+     */
+    public static final float BOUNCE_WITH_ENEMY_VOLUME_FACTOR = 0.4f;
+
+    /** Sound played when an enemy ball collides with another one or with the window border. */
+    private final Sound bounceSound;
 
     private float speedX = 0;
     private float speedY = 0;
@@ -42,6 +56,9 @@ public class Enemy extends Ball {
     public Enemy(Collision game) {
         super(game, "enemy.png");
         setRandomPositionFarFromPlayer(MINIMUM_DISTANCE_TO_PLAYER);
+
+        // Prepare the "bounce" sound
+        bounceSound = game.getSound("bounce.mp3");
 
         // Set ball transparent, fade-in during 1 second then enable the ball
         getColor().a = 0;
@@ -60,8 +77,16 @@ public class Enemy extends Ball {
             moveBy(speedX * delta * factor, speedY * delta * factor);
 
             // Bounce the ball off the borders of the window
-            if(getX() < 0 || getRight() > game.getWidth()) speedX = -speedX;
-            if(getY() < 0 || getTop() > game.getHeight()) speedY = -speedY;
+            boolean bounced = false;
+            if(getX() < 0 || getRight() > game.getWidth()) {
+                speedX = -speedX;
+                bounced = true;
+            }
+            if(getY() < 0 || getTop() > game.getHeight()) {
+                speedY = -speedY;
+                bounced = true;
+            }
+            if(bounced) bounceSound.play(game.getVolume() * BOUNCE_WITH_BORDER_VOLUME_FACTOR);
 
             // Ensure the ball is inside the window
             keepInsideWindow();
@@ -125,6 +150,9 @@ public class Enemy extends Ball {
         b1.speedY = speed1.y;
         b2.speedX = speed2.x;
         b2.speedY = speed2.y;
+
+        // Play the "bounce" sound
+        b1.bounceSound.play(b1.game.getVolume() * BOUNCE_WITH_ENEMY_VOLUME_FACTOR);
     }
 
     /**

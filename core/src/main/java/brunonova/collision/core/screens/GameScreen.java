@@ -280,6 +280,12 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
+    public void pause() {
+        super.pause();
+        game.pauseGame(this);  // pause the game when the window loses focus
+    }
+
+    @Override
     public boolean keyDown(int keycode) {
         if(!gameEnding) {
             switch(keycode) {

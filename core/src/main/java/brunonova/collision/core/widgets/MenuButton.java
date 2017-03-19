@@ -16,7 +16,9 @@
  */
 package brunonova.collision.core.widgets;
 
+import brunonova.collision.core.Collision;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -30,12 +32,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
  * A custom {@link TextButton} that supports keyboard navigation.
  */
 public class MenuButton extends TextButton implements SupportsKeyboardNavigation {
+    /** Factor to multiply the "menu_navigate" sound volume by. */
+    public static final float MENU_NAVIGATE_VOLUME_FACTOR = 0.3f;
+
     // Next and previous widgets for keyboard navigation, and also the left and
     // right widgets for multiple choice groups of buttons
     private SupportsKeyboardNavigation nextWidget, previousWidget, leftWidget, rightWidget;
 
+    /**
+     * Creates the button.
+     * @param text Label of the button.
+     * @param style Style of the button.
+     * @param navigateSound Sound played on keyboard navigation.
+     * @param game The game.
+     */
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public MenuButton(String text, TextButtonStyle style) {
+    public MenuButton(String text, TextButtonStyle style, Sound navigateSound, Collision game) {
         super(text, style);
 
         // Focus listener to make the button blink when it gains focus
@@ -68,16 +80,28 @@ public class MenuButton extends TextButton implements SupportsKeyboardNavigation
                         toggle();
                         return true;
                     case Input.Keys.DOWN:
-                        focusNext();
+                        if(getNextWidget() != null) {
+                            focusNext();
+                            navigateSound.play(game.getVolume() * MENU_NAVIGATE_VOLUME_FACTOR);
+                        }
                         return true;
                     case Input.Keys.UP:
-                        focusPrevious();
+                        if(getPreviousWidget() != null) {
+                            focusPrevious();
+                            navigateSound.play(game.getVolume() * MENU_NAVIGATE_VOLUME_FACTOR);
+                        }
                         return true;
                     case Input.Keys.LEFT:
-                        focusLeft();
+                        if(getLeftWidget() != null) {
+                            focusLeft();
+                            navigateSound.play(game.getVolume() * MENU_NAVIGATE_VOLUME_FACTOR);
+                        }
                         return true;
                     case Input.Keys.RIGHT:
-                        focusRight();
+                        if(getRightWidget() != null) {
+                            focusRight();
+                            navigateSound.play(game.getVolume() * MENU_NAVIGATE_VOLUME_FACTOR);
+                        }
                         return true;
                 }
                 return false;

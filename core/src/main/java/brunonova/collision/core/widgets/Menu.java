@@ -52,6 +52,7 @@ public class Menu extends Table {
 
     // Sounds
     private final Sound clickSound;
+    private final Sound navigateSound;
 
     /**
      * Creates the menu.
@@ -83,6 +84,7 @@ public class Menu extends Table {
 
         // Prepare sound
         clickSound = game.getSound("menu_click.mp3");
+        navigateSound = game.getSound("menu_navigate.mp3");
     }
 
     /**
@@ -95,7 +97,7 @@ public class Menu extends Table {
         row();  // add a row
 
         // Create the button
-        MenuButton button = new MenuButton(text, buttonStyle);
+        MenuButton button = new MenuButton(text, buttonStyle, navigateSound, game);
         add(button);
 
         // Update references for keyboard navigation
@@ -152,7 +154,7 @@ public class Menu extends Table {
         // Create a "radio" button for each choice
         for(ButtonChoice choice: choices) {
             // Create the button
-            MenuButton button = new MenuButton(choice.getText(), choiceButtonStyle);
+            MenuButton button = new MenuButton(choice.getText(), choiceButtonStyle, navigateSound, game);
             group.add(button);
             newButtons.add(button);
             row.add(button).padLeft(20);

@@ -56,6 +56,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * Main class of the game.
  */
 public class Collision extends Game {
+    // TODO: Android project?
     private static final String TAG = Collision.class.getName();
 
     private SpriteBatch batch;

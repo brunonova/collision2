@@ -19,7 +19,9 @@ package brunonova.collision.core.widgets;
 import brunonova.collision.core.Collision;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -34,6 +36,7 @@ import java.util.Objects;
  * A widget that displays a menu with a title.
  */
 public class Menu extends Table {
+    // TODO: change colors
     // Reference to the game
     private final Collision game;
 
@@ -45,7 +48,7 @@ public class Menu extends Table {
 
     // Widgets
     private final Label titleLabel;
-    private final List<TextButton> buttons;
+    private final List<SupportsKeyboardNavigation> navigableWidgets;
 
     // Sounds
     private final Sound clickSound;
@@ -70,7 +73,7 @@ public class Menu extends Table {
         this.game = game;
         setFillParent(true);
         top();
-        buttons = new ArrayList<>();
+        navigableWidgets = new ArrayList<>();
         this.textColor = textColor;
         setupStyles();
 
@@ -88,15 +91,22 @@ public class Menu extends Table {
      * @param action Action to run when the button is clicked.
      * @return The added button.
      */
-    public TextButton addButton(String text, Runnable action) {
+    public MenuButton addButton(String text, Runnable action) {
         row();  // add a row
 
         // Create the button
-        TextButton button = new TextButton(text, buttonStyle);
-        buttons.add(button);
+        MenuButton button = new MenuButton(text, buttonStyle);
         add(button);
 
-        // Setup the listener
+        // Update references for keyboard navigation
+        if(!navigableWidgets.isEmpty()) {
+            SupportsKeyboardNavigation previousWidget = navigableWidgets.get(navigableWidgets.size() - 1);
+            previousWidget.setNextWidget(button);
+            button.setPreviousWidget(previousWidget);
+        }
+        navigableWidgets.add(button);
+
+        // Setup "change" the listener
         button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
@@ -104,6 +114,11 @@ public class Menu extends Table {
                 action.run();
             }
         });
+
+        // If this is the first navigable widget, focus it
+        if(navigableWidgets.size() == 1) {
+            button.focus();
+        }
 
         return button;
     }
@@ -116,12 +131,12 @@ public class Menu extends Table {
      * @param choices Definition of the available options.
      * @return The added buttons.
      */
-    public <T> List<TextButton> addButtonChoices(String labelText, T defaultValue, ButtonChoice<T>... choices) {
+    public <T> List<MenuButton> addButtonChoices(String labelText, T defaultValue, ButtonChoice<T>... choices) {
         row();  // add a row
 
         // Create a table for this row
         Table row = new Table();
-        List<TextButton> newButtons = new ArrayList<>();
+        List<MenuButton> newButtons = new ArrayList<>();
         add(row);
 
         // Create a button group to ensure that only 1 choice is selected
@@ -137,9 +152,8 @@ public class Menu extends Table {
         // Create a "radio" button for each choice
         for(ButtonChoice choice: choices) {
             // Create the button
-            TextButton button = new TextButton(choice.getText(), choiceButtonStyle);
+            MenuButton button = new MenuButton(choice.getText(), choiceButtonStyle);
             group.add(button);
-            buttons.add(button);
             newButtons.add(button);
             row.add(button).padLeft(20);
 
@@ -159,6 +173,20 @@ public class Menu extends Table {
                     }
                 }
             });
+        }
+
+        // Update references for keyboard navigation
+        MenuButtonChoices buttonChoices = new MenuButtonChoices(newButtons);
+        if(!navigableWidgets.isEmpty()) {
+            SupportsKeyboardNavigation previousWidget = navigableWidgets.get(navigableWidgets.size() - 1);
+            previousWidget.setNextWidget(buttonChoices);
+            buttonChoices.setPreviousWidget(previousWidget);
+        }
+        navigableWidgets.add(buttonChoices);
+
+        // If this is the first navigable widget, focus it
+        if(navigableWidgets.size() == 1) {
+            buttonChoices.focus();
         }
 
         return newButtons;
@@ -222,6 +250,17 @@ public class Menu extends Table {
     }
 
     /**
+     * Creates and returns a blinking action.
+     * @return A "blink" action.
+     */
+    private Action createBlinkAction() {
+        return Actions.forever(
+                Actions.sequence(
+                        Actions.fadeOut(0.25f),
+                        Actions.fadeIn(0.25f)));
+    }
+
+    /**
      * Returns the title label.
      * @return Title label.
      */
@@ -230,11 +269,11 @@ public class Menu extends Table {
     }
 
     /**
-     * Returns the buttons of the menu.
-     * @return Menu buttons.
+     * Returns the navigable widgets of the menu.
+     * @return Navigable widgets.
      */
-    public List<TextButton> getButtons() {
-        return buttons;
+    public List<SupportsKeyboardNavigation> getNavigableWidgets() {
+        return navigableWidgets;
     }
 
     /**

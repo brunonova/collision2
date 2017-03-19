@@ -28,7 +28,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
  * The main menu.
  */
 public class MenuScreen extends BaseScreen {
-    // TODO: keyboard navigation in menus
     private Menu menu;
 
     /**

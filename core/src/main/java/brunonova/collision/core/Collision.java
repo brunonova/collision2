@@ -117,6 +117,12 @@ public class Collision extends Game {
         // Enable or disable full screen mode when pressing F11
         if(Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
             setFullScreen(!isFullScreen());
+
+            // If on the Options screen, update the selection of the full screen
+            // option
+            if(getScreen() == optionsScreen) {
+                optionsScreen.updateFullScreenOption();
+            }
         }
     }
 

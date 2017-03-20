@@ -21,14 +21,16 @@ import brunonova.collision.core.enums.Difficulty;
 import brunonova.collision.core.enums.GameMode;
 import brunonova.collision.core.widgets.ButtonChoice;
 import brunonova.collision.core.widgets.Menu;
+import brunonova.collision.core.widgets.MenuButton;
 import com.badlogic.gdx.Input;
+import java.util.List;
 
 /**
  * The options menu.
  */
 public class OptionsScreen extends BaseScreen {
     private Menu menu;
-    // TODO: update Full Screen option when F11 is pressed
+    private List<MenuButton> fullScreenOptions;
 
     /**
      * Creates the screen.
@@ -51,7 +53,7 @@ public class OptionsScreen extends BaseScreen {
                 new ButtonChoice<>(game.t("options.difficulty.easy"), Difficulty.EASY, this::changeDifficulty),
                 new ButtonChoice<>(game.t("options.difficulty.medium"), Difficulty.MEDIUM, this::changeDifficulty),
                 new ButtonChoice<>(game.t("options.difficulty.hard"), Difficulty.HARD, this::changeDifficulty));
-        menu.addButtonChoices(game.t("options.fullScreen"), game.isFullScreen(),
+        fullScreenOptions = menu.addButtonChoices(game.t("options.fullScreen"), game.isFullScreen(),
                 new ButtonChoice<>(game.t("options.off"), false, this::changeFullScreen),
                 new ButtonChoice<>(game.t("options.on"), true, this::changeFullScreen));
         menu.addButtonChoices(game.t("options.sound"), game.getVolume(),
@@ -71,6 +73,23 @@ public class OptionsScreen extends BaseScreen {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Updates the currently selected full screen option according to the
+     * current mode.
+     */
+    public void updateFullScreenOption() {
+        if(fullScreenOptions != null && fullScreenOptions.size() == 2) {
+            // Get the ON or OFF button, depending on the full screen mode
+            int index = game.isFullScreen() ? 1 : 0;
+            MenuButton button = fullScreenOptions.get(index);
+
+            // Check that button without firing events
+            button.setProgrammaticChangeEvents(false);
+            fullScreenOptions.get(index).setChecked(true);
+            button.setProgrammaticChangeEvents(true);
         }
     }
 

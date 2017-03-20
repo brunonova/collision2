@@ -22,30 +22,29 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 
 /**
- * A custom {@link TextButton} that supports keyboard navigation.
+ * A custom {@link TextField} that supports keyboard navigation.
  */
-public class MenuButton extends TextButton implements SupportsKeyboardNavigation {
-    // Next and previous widgets for keyboard navigation, as well as left and
-    // right widgets for multiple choice groups of buttons
-    private SupportsKeyboardNavigation nextWidget, previousWidget, leftWidget, rightWidget;
+public class MenuTextField extends TextField implements SupportsKeyboardNavigation {
+    // Next and previous widgets for keyboard navigation
+    private SupportsKeyboardNavigation nextWidget, previousWidget;
 
     /**
-     * Creates the button.
-     * @param text Label of the button.
-     * @param style Style of the button.
+     * Creates the text field.
+     * @param text Default text of the field.
+     * @param style Style of the text field.
      * @param navigateSound Sound played on keyboard navigation.
      * @param game The game.
      */
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public MenuButton(String text, TextButtonStyle style, Sound navigateSound, Collision game) {
+    public MenuTextField(String text, TextFieldStyle style, Sound navigateSound, Collision game) {
         super(text, style);
 
-        // Focus listener to make the button blink when it gains focus
+        // Focus listener to make the text field blink when it gains focus
         addListener(new FocusListener() {
             @Override
             public void keyboardFocusChanged(FocusListener.FocusEvent event, Actor actor, boolean focused) {
@@ -57,7 +56,7 @@ public class MenuButton extends TextButton implements SupportsKeyboardNavigation
             }
         });
 
-        // Mouse listener to focus the button when the mouse cursor enters it
+        // Mouse listener to focus the text field when the mouse cursor enters it
         addListener(new ClickListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -65,15 +64,13 @@ public class MenuButton extends TextButton implements SupportsKeyboardNavigation
             }
         });
 
-        // Keyboard listener to execute the button when Enter is pressed, and to
-        // change the focused widget when the arrow keys are pressed
+        // Keyboard listener and to change the focused widget when the arrow
+        // or Enter keys are pressed
         addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 switch(keycode) {
                     case Input.Keys.ENTER:
-                        toggle();
-                        return true;
                     case Input.Keys.DOWN:
                         if(getNextWidget() != null) {
                             focusNext();
@@ -83,18 +80,6 @@ public class MenuButton extends TextButton implements SupportsKeyboardNavigation
                     case Input.Keys.UP:
                         if(getPreviousWidget() != null) {
                             focusPrevious();
-                            navigateSound.play(game.getVolume() * Menu.MENU_NAVIGATE_VOLUME_FACTOR);
-                        }
-                        return true;
-                    case Input.Keys.LEFT:
-                        if(getLeftWidget() != null) {
-                            focusLeft();
-                            navigateSound.play(game.getVolume() * Menu.MENU_NAVIGATE_VOLUME_FACTOR);
-                        }
-                        return true;
-                    case Input.Keys.RIGHT:
-                        if(getRightWidget() != null) {
-                            focusRight();
                             navigateSound.play(game.getVolume() * Menu.MENU_NAVIGATE_VOLUME_FACTOR);
                         }
                         return true;
@@ -127,55 +112,5 @@ public class MenuButton extends TextButton implements SupportsKeyboardNavigation
     @Override
     public void setPreviousWidget(SupportsKeyboardNavigation previousWidget) {
         this.previousWidget = previousWidget;
-    }
-
-    /**
-     * Changes the focus to the left widget.
-     */
-    public void focusLeft() {
-        if(getLeftWidget() != null) {
-            getLeftWidget().focus();
-        }
-    }
-
-    /**
-     * Changes the focus to the right widget.
-     */
-    public void focusRight() {
-        if(getRightWidget() != null) {
-            getRightWidget().focus();
-        }
-    }
-
-    /**
-     * Returns the left widget, for multiple choice button groups.
-     * @return Left widget.
-     */
-    public SupportsKeyboardNavigation getLeftWidget() {
-        return leftWidget;
-    }
-
-    /**
-     * Sets the left widget, for multiple choice button groups.
-     * @param leftWidget Left widget.
-     */
-    public void setLeftWidget(SupportsKeyboardNavigation leftWidget) {
-        this.leftWidget = leftWidget;
-    }
-
-    /**
-     * Returns the right widget, for multiple choice button groups.
-     * @return Right widget.
-     */
-    public SupportsKeyboardNavigation getRightWidget() {
-        return rightWidget;
-    }
-
-    /**
-     * Sets the right widget, for multiple choice button groups.
-     * @param rightWidget Right widget.
-     */
-    public void setRightWidget(SupportsKeyboardNavigation rightWidget) {
-        this.rightWidget = rightWidget;
     }
 }

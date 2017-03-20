@@ -36,6 +36,9 @@ import java.util.Objects;
  * A widget that displays a menu with a title.
  */
 public class Menu extends Table {
+    /** Factor to multiply the "menu_navigate" sound volume by. */
+    public static final float MENU_NAVIGATE_VOLUME_FACTOR = 0.3f;
+
     // Reference to the game
     private final Collision game;
 
@@ -211,8 +214,21 @@ public class Menu extends Table {
         row.add(label);
 
         // Create the text field
-        TextField textField = new TextField(defaultText, textFieldStyle);
+        MenuTextField textField = new MenuTextField(defaultText, textFieldStyle, navigateSound, game);
         row.add(textField).width(200).padLeft(20);
+
+        // Update references for keyboard navigation
+        if(!navigableWidgets.isEmpty()) {
+            SupportsKeyboardNavigation previousWidget = navigableWidgets.get(navigableWidgets.size() - 1);
+            previousWidget.setNextWidget(textField);
+            textField.setPreviousWidget(previousWidget);
+        }
+        navigableWidgets.add(textField);
+
+        // If this is the first navigable widget, focus it
+        if(navigableWidgets.size() == 1) {
+            textField.focus();
+        }
 
         return textField;
     }
@@ -250,7 +266,7 @@ public class Menu extends Table {
      * Creates and returns a blinking action.
      * @return A "blink" action.
      */
-    private Action createBlinkAction() {
+    public static Action createBlinkAction() {
         return Actions.forever(
                 Actions.sequence(
                         Actions.fadeOut(0.25f),

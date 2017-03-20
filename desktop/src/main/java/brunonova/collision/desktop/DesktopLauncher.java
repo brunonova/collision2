@@ -24,6 +24,7 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Locale;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.apache.commons.lang3.SystemUtils;
@@ -38,6 +39,7 @@ public class DesktopLauncher {
     public static void main(String[] args) {
         // Parse comand-line arguments
         OptionParser parser = new OptionParser();
+        parser.acceptsAll(Arrays.asList("l", "locale"), "use a different locale").withRequiredArg();
         parser.acceptsAll(Arrays.asList("h", "help"), "show this help message and exit")
                 .forHelp();
         parser.acceptsAll(Arrays.asList("v", "version"), "show program version");
@@ -56,6 +58,11 @@ public class DesktopLauncher {
         if(options.has("version")) {
             System.out.println("Collision " + Constants.getVersion());
             System.exit(0);
+        }
+
+        if(options.has("locale")) {
+            String locale = (String) options.valueOf("locale");
+            Locale.setDefault(Locale.forLanguageTag(locale));
         }
 
         // Configure the game

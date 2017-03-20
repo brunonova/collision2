@@ -36,7 +36,6 @@ import java.util.Objects;
  * A widget that displays a menu with a title.
  */
 public class Menu extends Table {
-    // TODO: change colors
     // Reference to the game
     private final Collision game;
 
@@ -226,22 +225,18 @@ public class Menu extends Table {
         titleStyle = new Label.LabelStyle(game.getFont("font-title.ttf"), textColor);
 
         // Style of the labels
-        labelStyle = new Label.LabelStyle(game.getFont("font-menu.ttf"), textColor);
+        labelStyle = new Label.LabelStyle(game.getFont("font-menu.ttf"), Color.DARK_GRAY);
 
         // Style of the buttons
         buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.font = game.getFont("font-menu.ttf");
         buttonStyle.fontColor = textColor;
-        buttonStyle.overFontColor = Color.FOREST;
-        buttonStyle.downFontColor = Color.GREEN;
 
         // Style of the radio buttons
         choiceButtonStyle = new TextButton.TextButtonStyle();
         choiceButtonStyle.font = game.getFont("font-menu.ttf");
         choiceButtonStyle.fontColor = textColor;
-        choiceButtonStyle.overFontColor = Color.FOREST;
-        choiceButtonStyle.downFontColor = Color.GREEN;
-        choiceButtonStyle.checkedFontColor = Color.RED;
+        choiceButtonStyle.checkedFontColor = Color.FOREST;
 
         // Style of the text fields
         textFieldStyle = new TextField.TextFieldStyle();

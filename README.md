@@ -18,15 +18,15 @@ The game has three difficulty levels and two modes:
 During the game different bonuses can also appear. These can provide either a
 positive or a negative effect.
 
-This game was inspired by [Kollision][kollision], a KDE game.
-It was developed in Java and LibGDX.
+This game was developed in Java and LibGDX, and was inspired by
+[Kollision][kollision], a KDE game.
 
 
 ## Screenshots
 
-<img src="screenshot1.png" width="300" height="300" />
+<img src="misc/screenshot1.png" width="300" height="300" />
 
-<img src="screenshot2.png" width="300" height="300" />
+<img src="misc/screenshot2.png" width="300" height="300" />
 
 
 

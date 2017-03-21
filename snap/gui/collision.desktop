@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Collision
+Name[pt]=Colisão
+GenericName=Collision
+GenericName[pt]=Colisão
+Comment=A ball dodging game
+Comment[pt]=Um jogo para desviar-se de outras bolas
+Keywords=game;
+Keywords[pt]=jogo;
+Type=Application
+Exec=collision %f
+Icon=${SNAP}/meta/gui/icon.png
+Terminal=false
+StartupNotify=true
+Categories=Game;ArcadeGame;Java;
+StartupWMClass=brunonova-collision-desktop-DesktopLauncher

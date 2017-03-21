@@ -1,0 +1,65 @@
+name: collision
+version: 2.0.0-1
+summary: A ball dodging game
+description: |
+  In this game you control a green ball. Using your mouse or keyboard, you have
+  to avoid hitting the ever increasing number of red balls that are moving
+  around in the game window. The moment you touch one of them, the game is over.
+
+  The game has three difficulty levels and two modes:
+
+  * Time: you have to dodge the red balls for as long as possible. Every few
+    seconds a new red ball appears. The longer you last, the higher the score
+    will be.
+  * Coins: you have to catch as many coins as you can. Every few coins a new red
+    ball appears. The more coins you gather, the higher the score will be.
+
+  During the game different bonuses can also appear. These can provide either a positive or a negative effect.
+
+grade: stable
+confinement: strict
+
+apps:
+  collision:
+    command: bin/collision-wrapper
+    plugs:
+      - opengl
+      - x11
+      - pulseaudio
+
+parts:
+  collision:
+    plugin: nil
+    source: https://github.com/brunonova/collision2/releases/download/v2.0.0/collision-2.0.0.tar.gz
+    build: |
+      chmod +x gradlew
+      ./gradlew dist
+    install: |
+      install -Dm755 desktop/build/libs/collision-2.0.0.jar "$SNAPCRAFT_PART_INSTALL/usr/share/collision/collision.jar"
+    build-packages:
+      - default-jdk
+  # Copy wrappers to the snap
+  wrappers:
+    plugin: nil
+    source: wrappers
+    install: |
+      install -Dm755 collision.sh "$SNAPCRAFT_PART_INSTALL/bin/collision-wrapper"
+  # Bundle dependencies in the snap
+  deps:
+    plugin: nil
+    stage-packages:
+      - default-jre
+      - x11-xserver-utils
+    prime:
+      - -usr/include
+      - -usr/sbin
+      - -usr/share/applications
+      - -usr/share/apport
+      - -usr/share/avahi
+      - -usr/share/doc
+      - -usr/share/doc-base
+      - -usr/share/lintian
+      - -usr/share/man
+      - -var
+      # These libraries are large, and they don't seem to be needed
+      - -usr/lib/*/libicudata.so*

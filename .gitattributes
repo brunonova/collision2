@@ -1,0 +1,3 @@
+/snapcraft.yaml     eol=lf
+/wrappers/*         eol=lf
+*.desktop           eol=lf

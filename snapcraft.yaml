@@ -32,12 +32,12 @@ parts:
     plugin: nil
     source: https://github.com/brunonova/collision2/releases/download/v2.0.0/collision-2.0.0.tar.gz
     build: |
-      gradle dist
+      chmod +x gradlew
+      ./gradlew dist
     install: |
       install -Dm755 desktop/build/libs/collision-2.0.0.jar "$SNAPCRAFT_PART_INSTALL/usr/share/collision/collision.jar"
     build-packages:
       - default-jdk
-      - gradle
   # Copy wrappers to the snap
   wrappers:
     plugin: nil

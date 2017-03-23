@@ -29,10 +29,10 @@ apps:
 
 parts:
   collision:
-    plugin: gradle
+    plugin: nil
     source: https://github.com/brunonova/collision2/releases/download/v2.0.0/collision-2.0.0.tar.gz
-    gradle-options:
-      - dist
+    build: |
+      gradle dist
     install: |
       install -Dm755 desktop/build/libs/collision-2.0.0.jar "$SNAPCRAFT_PART_INSTALL/usr/share/collision/collision.jar"
     build-packages:

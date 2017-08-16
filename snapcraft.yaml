@@ -1,5 +1,5 @@
 name: collision
-version: 2.0.0-1
+version: 2.0.0-2
 summary: A ball dodging game
 description: |
   In this game you control a green ball. Using your mouse or keyboard, you have
@@ -21,7 +21,7 @@ confinement: strict
 
 apps:
   collision:
-    command: bin/collision-wrapper
+    command: desktop-launch $SNAP/bin/collision-wrapper
     plugs:
       - opengl
       - x11
@@ -38,6 +38,8 @@ parts:
       install -Dm755 desktop/build/libs/collision-2.0.0.jar "$SNAPCRAFT_PART_INSTALL/usr/share/collision/collision.jar"
     build-packages:
       - default-jdk
+    after:
+      - desktop-gtk3
   # Copy wrappers to the snap
   wrappers:
     plugin: nil

@@ -1,22 +1,5 @@
 #!/bin/sh
 # Wrapper to run collision
-case "$SNAP_ARCH" in
-	"amd64") ARCH='x86_64-linux-gnu'
-	;;
-	"i386") ARCH='i386-linux-gnu'
-	;;
-	*)
-		echo "Unsupported architecture"
-		exit 1
-	;;
-esac
-
-# Mesa Libs
-export LD_LIBRARY_PATH=$SNAP/usr/lib/$ARCH/mesa:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=$SNAP/usr/lib/$ARCH/mesa-egl:$LD_LIBRARY_PATH
-
-# Tell libGL where to find the drivers
-export LIBGL_DRIVERS_PATH=$SNAP/usr/lib/$ARCH/dri
 
 # Setup environment variables
 export JAVA_HOME="$SNAP/usr/lib/jvm/default-java"
